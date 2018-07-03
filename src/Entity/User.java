@@ -1,9 +1,18 @@
 package Entity;
 
 public class User {
+    private int id;
     private String userName;
     private String userEmail;
     private UserType userType;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getUserEmail() {
         return userEmail;
