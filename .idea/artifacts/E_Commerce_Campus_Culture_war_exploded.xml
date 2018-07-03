@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="E-Commerce_Campus_Culture:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/E_Commerce_Campus_Culture_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="E-Commerce_Campus_Culture/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="E-Commerce_Campus_Culture" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Struts 2" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
