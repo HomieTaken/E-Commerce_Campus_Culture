@@ -7,8 +7,22 @@
 <struts>
     <constant name="struts.devMode" value="true" />
     <package name="data" extends="struts-default">
+        <action name="index">
+            <result name="success" type="redirect">/index.jsp</result>
+        </action>
+        <action name="toLogin">
+            <result name="success" type="redirect">/login.jsp</result>
+        </action>
+
+        <action name="register" class="Actions.RegisterAction" method="execute">
+            <result name="success" type="redirect">/login.jsp</result>
+        </action>
         <action name="login" class="Actions.LoginAction" method="execute">
-            <result name="success" type="redirect">/JSP/HomePage.jsp</result>
+            <result name="success" type="redirect">/index.jsp</result>
+        </action>
+
+        <action name="navigationSwitch" class="Actions.NavigationSwitch" method="execute">
+            <result name="success">/index.jsp</result>
         </action>
     </package>
 </struts>
