@@ -30,7 +30,8 @@
         <div class="col-md-12">
 
             <br>
-            <div class="row-fluid">
+            <div class="row">
+            <div class="col-md-11">
                 <div class="span12">
                     <div class="page-header">
                         <h2>
@@ -39,6 +40,12 @@
                     </div>
                 </div>
             </div>
+                <div class="col-md-1">
+                    <a href="login.jsp">登录</a>
+                    <a href="register.jsp">注册</a>
+                </div>
+            </div>
+
             <br>
             <!---导航栏-->
             <!--
