@@ -24,5 +24,20 @@ public class DBConnect {
         }
         return conn;
     }
+
+    public static void close(Connection con,Statement st,ResultSet rs){
+        if(rs!=null)
+            try {
+                rs.close();
+            } catch (SQLException e) {   e.printStackTrace();       }
+        if(st!=null)
+            try {
+                st.close();
+            } catch (SQLException e) {  e.printStackTrace();        }
+        if(con!=null)
+            try {
+                con.close();
+            } catch (SQLException e) {   e.printStackTrace();       }
+    }
 }
 

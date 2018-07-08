@@ -40,13 +40,13 @@
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
-                        <a href="/index.jsp">主页</a>
+                        <a href="#">主页</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="/index_group.jsp">兴趣小组</a>
+                        <a href="#">兴趣小组</a>
                     </li>
                     <li class="breadcrumb-item ">
-                        <a href="/index_team.jsp">产品团队</a>
+                        <a href="#">产品团队</a>
                     </li>
                 </ol>
             </nav>

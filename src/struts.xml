@@ -6,24 +6,52 @@
 
 <struts>
     <constant name="struts.devMode" value="true" />
+    <constant name="struts.multipart.saveDir" value="/tmp"/>
     <package name="data" extends="struts-default">
         <action name="index">
-            <result name="success" type="redirect">/index.jsp</result>
-        </action>
-        <action name="toLogin">
-            <result name="success" type="redirect">/login.jsp</result>
+            <result name="success">/index.jsp</result>
         </action>
 
         <action name="register" class="Actions.RegisterAction" method="execute">
-            <result name="success" type="redirect">/login.jsp</result>
+            <result name="success">/login.jsp</result>
+            <result name="input">/register.jsp</result>
+            <result name="error">/register.jsp</result>
         </action>
         <action name="login" class="Actions.LoginAction" method="execute">
-            <result name="success" type="redirect">/index.jsp</result>
-            <result name="error">/login.jsp</result>
+            <result name="success">/index.jsp</result>
+            <result name="input">/teamPage.jsp</result>
+        </action>
+        <action name="logout" class="Actions.LogoutAction">
+            <result name="success">/index.jsp</result>
         </action>
 
         <action name="navigationSwitch" class="Actions.NavigationSwitch" method="execute">
             <result name="success">/index.jsp</result>
+        </action>
+
+        <action name="releaseProduct" class="Actions.ReleaseProduct">
+            <result name="success">/teamPage.jsp</result>
+            <result name="input">/teamPage.jsp</result>
+        </action>
+
+        <action name="releaseActivity" class="Actions.ReleaseActivity">
+            <result name="success">/teamPage.jsp</result>
+            <result name="input">/teamPage.jsp</result>
+        </action>
+
+        <action name="enterTeamActivity" class="Actions.UserViewActivity" method="execute">
+            <result name="success" type="redirect">/team.jsp</result>
+        </action>
+
+        <action name="enterTeam" class="Actions.UserViewTeam" method="execute">
+            <result name="success">/team.jsp</result>
+        </action>
+
+        <action name="enterProduct" class="Actions.ProductDetail"  method="execute">
+            <result name="success">/productDetail.jsp</result>
+        </action>
+
+        <action name="getPic" class="Actions.GetPicResource"  method="execute">
         </action>
     </package>
 </struts>

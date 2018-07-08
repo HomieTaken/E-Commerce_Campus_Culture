@@ -1,8 +1,7 @@
 package Actions;
 
 import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.ActionContext;
-import org.apache.struts2.ServletActionContext;
+
 
 public class NavigationSwitch extends ActionSupport {
 
