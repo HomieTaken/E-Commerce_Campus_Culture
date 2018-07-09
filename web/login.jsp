@@ -54,28 +54,36 @@
 -->
 
     <form action="login.action" method="post" role="form">
-        <div class="input-group col-sm-6 " style="margin-left:25%">
-			<span class="input-group-addon" style="border-top-left-radius: 20px; border-bottom-left-radius:20px;">
-			<span class="glyphicon glyphicon-user">
-			</span>
-			</span>
-            <input name="userName" style="border-top-right-radius: 20px; border-bottom-right-radius:20px;" type="text" class="form-control" id="username" placeholder="请输入名字" >
-            <em id="name"></em>
+        <div class="row">
+            <div class="input-group col-sm-6 " style="margin-left:25%">
+			    <span class="input-group-addon" style="border-top-left-radius: 20px; border-bottom-left-radius:20px;">
+			        <span class="glyphicon glyphicon-user">
+			        </span>
+			    </span>
+                <input name="userName" style="border-top-right-radius: 20px; border-bottom-right-radius:20px;" type="text" class="form-control" id="username" placeholder="请输入名字" >
+            </div>
+            <div class="col-sm-2">
+                <em id="name"></em>
+            </div>
         </div>
         <br />
-        <div class="input-group col-sm-6" style="margin-left:25%">
-            <span class="input-group-addon" style="border-top-left-radius: 20px; border-bottom-left-radius:20px;">
-			<span class="glyphicon glyphicon-lock">
-			</span>
-			</span>
-            <input name = "userPassword" style="border-top-right-radius: 20px; border-bottom-right-radius:20px;" id="userpwd" placeholder="请输入密码" type="password" class="form-control">
-            <em id="pwd"></em>
+        <div class="row">
+            <div class="input-group col-sm-6" style="margin-left:25%">
+                <span class="input-group-addon" style="border-top-left-radius: 20px; border-bottom-left-radius:20px;">
+			        <span class="glyphicon glyphicon-lock">
+			        </span>
+			    </span>
+                <input name = "userPassword" style="border-top-right-radius: 20px; border-bottom-right-radius:20px;" id="userpwd" placeholder="请输入密码" type="password" class="form-control">
+            </div>
+            <div class="col-sm-2">
+                <em id="pwd"></em>
+            </div>
         </div>
         <br />
         <br />
         <div class="form-group" style="margin-left:34%">
             <div class="col-sm-offset-2 col-md-6">
-                <button type="submit" class="btn btn-info btn-block" onclick="return checkLogin()">登录&emsp;
+                <button class="btn btn-info btn-block" onclick="return checkLogin()">登录&emsp;
                     <span class="glyphicon glyphicon-share-alt" >
 			        </span>
                 </button>
@@ -83,7 +91,7 @@
         </div>
     </form>
     <div style="margin-left:53%">
-        <label for="register" class="col-md-4 control-label"><a href = "register.jsp">没有账户？注册一个</a></label>
+        <label class="col-md-4 control-label"><a href = "register.jsp">没有账户？注册一个</a></label>
     </div>
 
 

@@ -4,10 +4,10 @@
 //检查用户名和密码是否为空
 function checkLogin(){
     var username= document.getElementById("username");
-    if(username.value.trim()==""){//没有输入用户名是显示提示
+    if(username.value.trim()===""){//没有输入用户名是显示提示
         //获取所有子节点
         var findNodes = document.getElementById("name").children;
-        if(findNodes.length==0){//只添加一次span
+        if(findNodes.length===0){//只添加一次span
             var appdom= document.createElement("span");
             appdom.innerHTML="*用户名不能为空";
             appdom.style.color="red";
@@ -21,9 +21,9 @@ function checkLogin(){
         }
     }
     var userpwd = document.getElementById("userpwd");
-    if(userpwd.value.trim()==""){
+    if(userpwd.value.trim()===""){
         var findNodes2 = document.getElementById("pwd").children;
-        if(findNodes2.length==0){
+        if(findNodes2.length===0){
             var appdom2 = document.createElement("span");
             appdom2.innerHTML="*密码不能为空";
             appdom2.style.color="red";
@@ -36,16 +36,23 @@ function checkLogin(){
             document.getElementById("pwd").removeChild(findNodes2[0]);
         }
     }
+
+    if(username.value.trim()!==""&&userpwd.value.trim()!==""){
+        // var form=document.forms[0];
+        // form.action="login.action";
+        // form.method="post";
+        document.forms[0].submit();
+    }
 }
 
 //检查注册
 function checkRegister(){
 
     var username= document.getElementById("username");
-    if(username.value.trim()==""){//没有输入用户名是显示提示
+    if(username.value.trim()===""){//没有输入用户名是显示提示
         //获取所有子节点
         var findNodes = document.getElementById("name").children;
-        if(findNodes.length==0){//只添加一次span
+        if(findNodes.length===0){//只添加一次span
             var appdom= document.createElement("span");
             appdom.innerHTML="*用户名不能为空";
             appdom.style.color="red";
@@ -60,9 +67,9 @@ function checkRegister(){
     }
     ////
     var userpwd1 = document.getElementById("userpwd1");
-    if(userpwd1.value.trim()==""){
+    if(userpwd1.value.trim()===""){
         var findNodes2 = document.getElementById("pwd1").children;
-        if(findNodes2.length==0){
+        if(findNodes2.length===0){
             var appdom2 = document.createElement("span");
             appdom2.innerHTML="*密码不能为空";
             appdom2.style.color="red";
@@ -78,7 +85,7 @@ function checkRegister(){
     ////
     var userpwd2 = document.getElementById("userpwd2");
     var appdom3 = document.createElement("span");
-    if(userpwd2.value.trim()==""){
+    if(userpwd2.value.trim()===""){
         var findNodes2 = document.getElementById("pwd2").children;
         if(findNodes2.length>0){
             document.getElementById("pwd2").removeChild(findNodes2[0]);
@@ -87,7 +94,7 @@ function checkRegister(){
         appdom3.style.color="red";
         document.getElementById("pwd2").appendChild(appdom3);
         return false;
-    }else if(userpwd2.value.trim() != userpwd1.value.trim() && userpwd2.value.trim() != "" && userpwd1.value.trim() != ""){
+    }else if(userpwd2.value.trim() !== userpwd1.value.trim() && userpwd2.value.trim() !== "" && userpwd1.value.trim() !== ""){
         var findNodes2 = document.getElementById("pwd2").children;
         if(findNodes2.length>0){
             document.getElementById("pwd2").removeChild(findNodes2[0]);
@@ -107,9 +114,9 @@ function checkRegister(){
 
     ////
     var useremail = document.getElementById("useremail");
-    if(useremail.value.trim()==""){
+    if(useremail.value.trim()===""){
         var findNodes2 = document.getElementById("email").children;
-        if(findNodes2.length==0){
+        if(findNodes2.length===0){
             var appdom2 = document.createElement("span");
             appdom2.innerHTML="*邮箱不能为空";
             appdom2.style.color="red";
@@ -122,5 +129,7 @@ function checkRegister(){
             document.getElementById("email").removeChild(findNodes2[0]);
         }
     }
+
+    document.forms[0].submit();
 
 }

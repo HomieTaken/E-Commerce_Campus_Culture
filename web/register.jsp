@@ -34,7 +34,7 @@
     <br />
     <br />
 
-    <form action="Register.action" role="form" class="form-horizontal">
+    <form action="register.action" method="post" role="form" class="form-horizontal">
 
         <!--
         <div class="input-group mb-3">
@@ -87,45 +87,65 @@
             </select>
         </div>
         <br />
-        <div class="input-group col-sm-6 " style="margin-left:25%">
-			<span class="input-group-addon" style="border-top-left-radius: 20px; border-bottom-left-radius:20px;">
-			<span class="glyphicon glyphicon-user">
-			</span>
-			</span>
-            <input name="name" style="border-top-right-radius: 20px; border-bottom-right-radius:20px;" type="text" class="form-control" id="username" placeholder="请输入账户名">
-            <em id="name"></em>
+        <div class="row">
+            <div class="input-group col-sm-6 " style="margin-left:25%">
+                <span class="input-group-addon" style="border-top-left-radius: 20px; border-bottom-left-radius:20px;">
+                <span class="glyphicon glyphicon-user">
+                </span>
+                </span>
+                <input name="name" style="border-top-right-radius: 20px; border-bottom-right-radius:20px;" type="text" class="form-control" id="username" placeholder="请输入账户名">
+
+            </div>
+            <div class="col-sm-2">
+                <em id="name"></em>
+            </div>
         </div>
         <br />
-        <div class="input-group col-sm-6" style="margin-left:25%">
-            <span class="input-group-addon" style="border-top-left-radius: 20px; border-bottom-left-radius:20px;">
-			<span class="glyphicon glyphicon-lock">
-			</span>
-			</span>
-            <input name = "password" style="border-top-right-radius: 20px; border-bottom-right-radius:20px;" id="userpwd1" placeholder="请输入密码" type="password" class="form-control">
-            <em id="pwd1"></em>
+        <div class="row">
+            <div class="input-group col-sm-6" style="margin-left:25%">
+                <span class="input-group-addon" style="border-top-left-radius: 20px; border-bottom-left-radius:20px;">
+                <span class="glyphicon glyphicon-lock">
+                </span>
+                </span>
+                <input name = "password" style="border-top-right-radius: 20px; border-bottom-right-radius:20px;" id="userpwd1" placeholder="请输入密码" type="password" class="form-control">
+
+            </div>
+            <div class="col-sm-2">
+                <em id="pwd1"></em>
+            </div>
         </div>
         <br />
-        <div class="input-group col-sm-6" style="margin-left:25%">
-            <span class="input-group-addon" style="border-top-left-radius: 20px; border-bottom-left-radius:20px;">
-			<span class="glyphicon glyphicon-lock">
-			</span>
-			</span>
-            <input name = "repeatPassword" style="border-top-right-radius: 20px; border-bottom-right-radius:20px;" id="userpwd2" placeholder="请确认密码" type="password" class="form-control">
-            <em id="pwd2"></em>
+        <div class="row">
+            <div class="input-group col-sm-6" style="margin-left:25%">
+                <span class="input-group-addon" style="border-top-left-radius: 20px; border-bottom-left-radius:20px;">
+                <span class="glyphicon glyphicon-lock">
+                </span>
+                </span>
+                <input name = "repeatPassword" style="border-top-right-radius: 20px; border-bottom-right-radius:20px;" id="userpwd2" placeholder="请确认密码" type="password" class="form-control">
+
+            </div>
+            <div class="col-sm-2">
+                <em id="pwd2"></em>
+            </div>
         </div>
         <br />
-        <div class="input-group col-sm-6" style="margin-left:25%">
-            <span class="input-group-addon" style="border-top-left-radius: 20px; border-bottom-left-radius:20px;">
-			<span class="glyphicon glyphicon-envelope">
-			</span>
-			</span>
-            <input name = "email" style="border-top-right-radius: 20px; border-bottom-right-radius:20px;" id="useremail" placeholder="请输入邮箱" type="email" class="form-control">
-            <em id="email"></em>
+        <div class="row">
+            <div class="input-group col-sm-6" style="margin-left:25%">
+                <span class="input-group-addon" style="border-top-left-radius: 20px; border-bottom-left-radius:20px;">
+                <span class="glyphicon glyphicon-envelope">
+                </span>
+                </span>
+                <input name = "email" style="border-top-right-radius: 20px; border-bottom-right-radius:20px;" id="useremail" placeholder="请输入邮箱" type="email" class="form-control">
+
+            </div>
+            <div class="col-sm-2">
+                <em id="email"></em>
+            </div>
         </div>
         <br />
         <div class="form-group" style="margin-left:34%">
             <div class="col-sm-offset-2 col-md-6">
-                <button type="submit" class="btn btn-info btn-block" onsubmit="return checkRegister()">申请注册&emsp;
+                <button class="btn btn-info btn-block" onclick="return checkRegister()">申请注册&emsp;
                     <span class="glyphicon glyphicon-share-alt" >
 			</span></button>
             </div>
