@@ -130,6 +130,7 @@ function checkRegister(){
         }
     }
 
-    document.forms[0].submit();
-
+    var dh = '<%=Session["user_register_check"] %>';
+    if(dh==="true")
+        document.forms[0].submit();
 }

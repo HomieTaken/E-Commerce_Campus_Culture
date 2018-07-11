@@ -1,3 +1,4 @@
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
@@ -34,7 +35,11 @@
     <br />
     <br />
 
-    <form action="register.action" method="post" role="form" class="form-horizontal">
+    <div class="col-sm-6 " style="margin-left:35%">
+        <s:fielderror name="userNameMsg"/>
+    </div>
+
+    <form action="register.action" method="post" role="form" class="form-horizontal" onsubmit="return checkRegister()">
 
         <!--
         <div class="input-group mb-3">
@@ -73,7 +78,7 @@
         <br />
 
 
-        <div class="input-group col-sm-6" style="margin-left:25%">
+        <div class="row input-group col-sm-6" style="margin-left:25%">
 			<span class="input-group-addon" style="border-top-left-radius: 20px; border-bottom-left-radius:20px;">
 			<span class="glyphicon glyphicon-home">
 			</span>
@@ -88,12 +93,12 @@
         </div>
         <br />
         <div class="row">
-            <div class="input-group col-sm-6 " style="margin-left:25%">
+            <div id="nameCheck" class="input-group col-sm-6" style="margin-left:25%">
                 <span class="input-group-addon" style="border-top-left-radius: 20px; border-bottom-left-radius:20px;">
                 <span class="glyphicon glyphicon-user">
                 </span>
                 </span>
-                <input name="name" style="border-top-right-radius: 20px; border-bottom-right-radius:20px;" type="text" class="form-control" id="username" placeholder="请输入账户名">
+                <input name="name" style="border-top-right-radius: 20px; border-bottom-right-radius:20px;" type="text" class="form-control" id="username" aria-describedby="inputSuccess2Status" placeholder="请输入账户名">
 
             </div>
             <div class="col-sm-2">
@@ -145,7 +150,7 @@
         <br />
         <div class="form-group" style="margin-left:34%">
             <div class="col-sm-offset-2 col-md-6">
-                <button class="btn btn-info btn-block" onclick="return checkRegister()">申请注册&emsp;
+                <button id="submitBtn" type="submit" class="btn btn-info btn-block">申请注册&emsp;
                     <span class="glyphicon glyphicon-share-alt" >
 			</span></button>
             </div>
@@ -183,9 +188,45 @@
 
 <!-- 包括所有已编译的插件 -->
 <script src="js/bootstrap.min.js"></script>
+<script src="js/jquery-3.3.1.js"></script>
 <script type="text/javascript">
-    //检查用户名和密码是否为空
-    //检查用户名和密码是否为空
+    $(function() {
+        $("#username").blur(function() {
+            var val = $(this).val();
+            val = $.trim(val);
+
+            var $this = $(this);
+            var name=$("#name");
+
+            if (val !== "") {
+                //把当前节点后面的所有 font 兄弟节点删除
+                name.nextAll("font").remove();
+                var url = "user_checkName";
+                var args = {
+                    "userName" : val
+                };
+                $.post(url, args, function(data) {
+                    //表示可用
+                    if (data === "1") {
+                        name.after("<font color='green'>*用户名可用!</font>");
+                    }
+                    //不可用
+                    else if (data === "0") {
+                        name.after("<font color='red'>*用户名已被注册!</font>");
+                    }
+                    //服务器错误
+                    else {
+                        alert("服务器错误!");
+                    }
+                });
+            } else {
+
+                $(this).val("");
+                $this.focus();
+            }
+        });
+    });
+
     function checkRegister(){
 
         var username= document.getElementById("username");
@@ -234,7 +275,7 @@
             appdom3.style.color="red";
             document.getElementById("pwd2").appendChild(appdom3);
             return false;
-        }else if(userpwd2.value.trim() != userpwd1.value.trim() && userpwd2.value.trim() != "" && userpwd1.value.trim() != ""){
+        }else if(userpwd2.value.trim() !== userpwd1.value.trim() && userpwd2.value.trim() !== "" && userpwd1.value.trim() !== ""){
             var findNodes2 = document.getElementById("pwd2").children;
             if(findNodes2.length>0){
                 document.getElementById("pwd2").removeChild(findNodes2[0]);
@@ -270,8 +311,8 @@
             }
         }
 
+        document.forms[0].submit();
     }
-
 </script>
 </body>
 </html>

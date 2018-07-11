@@ -1,3 +1,4 @@
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
@@ -52,7 +53,9 @@
     <span class="input-group-addon">.00</span>
 </div>
 -->
-
+    <div class="col-sm-6 " style="margin-left:35%">
+        <s:fielderror name="userName"/>
+    </div>
     <form action="login.action" method="post" role="form">
         <div class="row">
             <div class="input-group col-sm-6 " style="margin-left:25%">
@@ -91,9 +94,39 @@
         </div>
     </form>
     <div style="margin-left:53%">
-        <label class="col-md-4 control-label"><a href = "register.jsp">没有账户？注册一个</a></label>
+        <label class="col-md-4 control-label"><a href = "/register.jsp" data-toggle="modal">没有账户？注册一个</a></label>
     </div>
 
+    <%--<a id="modal-774029" href="#modal-container-774029" role="button" class="btn btn-warning" data-toggle="modal">结算</a>--%>
+
+    <%--<div class="modal fade" id="modal-container-774029" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">--%>
+        <%--<div class="modal-dialog" role="document">--%>
+            <%--<div class="modal-content">--%>
+                <%--<div class="modal-header">--%>
+                    <%--<h5 class="modal-title" id="myModalLabel">--%>
+                        <%--结算--%>
+                    <%--</h5>--%>
+                    <%--<button type="button" class="close" data-dismiss="modal">--%>
+                        <%--<span aria-hidden="true">×</span>--%>
+                    <%--</button>--%>
+                <%--</div>--%>
+                <%--<div class="modal-body">--%>
+                    <%--确认付款？--%>
+                <%--</div>--%>
+                <%--<div class="modal-footer">--%>
+
+                    <%--<button type="button" class="btn btn-primary">--%>
+                        <%--确认--%>
+                    <%--</button>--%>
+                    <%--<button type="button" class="btn btn-secondary" data-dismiss="modal">--%>
+                        <%--取消--%>
+                    <%--</button>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+
+        <%--</div>--%>
+
+    <%--</div>--%>
 
 </div>
 

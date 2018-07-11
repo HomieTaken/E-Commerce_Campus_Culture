@@ -47,22 +47,39 @@ public class LoginAction extends ActionSupport {
     }
 
     @Override
-    public String execute() throws Exception {
+    public void validate() {
         String sql = "select * from user where user_name = '" + this.getUserName()+"' and user_password = '"+ this.getUserPassword() +"'";
         System.out.println(sql);
-        ResultSet rs = DBOperation.getRS(sql);
-        if(!rs.next()){
-            msg = "用户名或密码错误，请重新输入！";
-            System.out.println(msg);
-            DBOperation.close();
-            return ERROR;
-        } else {
-            rs=DBOperation.getRS("select user_type from user where user_name='"+userName+"'");
+        try {
+            ResultSet rs = DBOperation.getRS(sql);
+            if (!rs.next()) {
+                addFieldError("userName","用户名或密码错误，请重新输入！");
+//                msg = "用户名或密码错误，请重新输入！";
+//                System.out.println(msg);
+                DBOperation.close();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public String execute() throws Exception {
+//        String sql = "select * from user where user_name = '" + this.getUserName()+"' and user_password = '"+ this.getUserPassword() +"'";
+//        System.out.println(sql);
+//        ResultSet rs = DBOperation.getRS(sql);
+//        if(!rs.next()){
+//            msg = "用户名或密码错误，请重新输入！";
+//            System.out.println(msg);
+//            DBOperation.close();
+//            return ERROR;
+//        } else {
+            ResultSet rs=DBOperation.getRS("select user_type from user where user_name='"+userName+"'");
             if(rs.next()){
                 userType=rs.getNString(1);
             }
-            if(userType==null||(!userType.equals("INDIVIDUAL")&&!userType.equals("TEAM")))
-                return ERROR;
+//            if(userType==null||(!userType.equals("INDIVIDUAL")&&!userType.equals("TEAM")))
+//                return ERROR;
             ActionContext actionContext = ActionContext.getContext();
             Map<String, Object> session = actionContext.getSession();
             session.put("user_name", this.getUserName());
@@ -71,7 +88,9 @@ public class LoginAction extends ActionSupport {
             System.out.println("登陆成功");
             if(userType.equals("INDIVIDUAL"))
                 return SUCCESS;
-            else return INPUT;
-        }
+            else return ERROR;
+//        }
+//        return super.execute();
     }
+
 }
