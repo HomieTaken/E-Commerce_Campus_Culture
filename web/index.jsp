@@ -58,6 +58,9 @@
                             <li class="breadcrumb-item center-vertical">
                                 <a href="#proList">热销产品</a>
                             </li>
+                            <li class="breadcrumb-item center-vertical">
+                                <a href="chat.jsp">兴趣小组</a>
+                            </li>
                         </div>
 
                         <div class="col-md-6">

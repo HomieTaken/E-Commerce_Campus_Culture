@@ -7,11 +7,14 @@ import java.text.SimpleDateFormat;
 
 import Encoder.ServerEncoder;
 
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.servlet.http.HttpSession;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
+import net.sf.json.JSON;
 import net.sf.json.JSONObject;
 
 /**
@@ -37,6 +40,8 @@ public class ChatServer {
             init(session,config);
             if(httpSession.getAttribute("user_name")==null)
                 return;
+            if(httpSession.getAttribute("group_name")==null)
+                return;
 
             //添加服务器组，不存在的组则新建
             String groupName=(String) httpSession.getAttribute("group_name");
@@ -48,8 +53,9 @@ public class ChatServer {
                 ChatServers.get(groupName).add(this);
             }
 //            ChatServers.add(this);
+
             System.out.println(new Date().toString()+":"+ChatServers.size());
-//            sendOnlineUsers();
+            sendOnlineUsers();
 
 //            String selfName = (String) httpSession.getAttribute("user_name");
 
@@ -98,7 +104,7 @@ public class ChatServer {
             chatServers.remove(this);
 //            ChatServers.remove(this);//会不会remove 两次
             //发送在线列表
-//            sendOnlineUsers();
+            sendOnlineUsers();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -160,7 +166,7 @@ public class ChatServer {
         message=message.replaceAll("}","");
 
 //        message.put("date", DATE_FORMAT.format(new Date()));
-        message+=",\"date\":\""+DATE_FORMAT.format(new Date())+"\"";
+        message+=",\"date\":\""+DATE_FORMAT.format(new Date())+"\",\"type\":\"message\"";
 
         String sendStr;
         //发送消息
@@ -179,21 +185,27 @@ public class ChatServer {
      * @throws IOException IO异常
      * @throws EncodeException 编码器异常
      */
-//    private void sendOnlineUsers() throws IOException, EncodeException {
-//        //当有新用户连接服务器时，将在线列表发送给所有在线用户
-//        Set<String> userSet =new HashSet<>();
-//        for (ChatServer chatServer: ChatServers){
-//            String temp = (String) chatServer.getHttpSession().getAttribute("user_name");
-//            if (temp!=null){
-////                temp.setChatRecords(null);//不需要加载聊天记录----否则会引起死循环解析
-//                userSet.add(temp);
-//            }
-//        }
-//        //发送在线列表
-//        for (ChatServer chatServer: ChatServers){
-//            chatServer.getSession().getBasicRemote().sendObject(userSet);
-//        }
-//    }
+    private void sendOnlineUsers() throws IOException, EncodeException {
+        //当有新用户连接服务器时，将在线列表发送给所有在线用户
+        if(httpSession.getAttribute("group_name")==null)
+            return;
+        String groupName=(String) httpSession.getAttribute("group_name");
+        CopyOnWriteArraySet<ChatServer> chatServers=ChatServers.get(groupName);
+        Set<String> userSet =new HashSet<>();
+        for (ChatServer chatServer: chatServers){
+            String temp = (String) chatServer.getHttpSession().getAttribute("user_name");
+            if (temp!=null){
+//                temp.setChatRecords(null);//不需要加载聊天记录----否则会引起死循环解析
+                userSet.add(temp);
+            }
+        }
+        //发送在线列表
+
+        for (ChatServer chatServer: chatServers){
+            String data="{\"type\":\"onlineUsers\",\"data\":\""+userSet.toString()+"\"}";
+            chatServer.getSession().getBasicRemote().sendText(data);
+        }
+    }
 
     public Session getSession() {
         return session;

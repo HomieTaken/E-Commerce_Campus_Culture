@@ -1,3 +1,4 @@
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="Entity.InterestGroup" %>
 <%@ page import="java.sql.ResultSet" %>
@@ -117,9 +118,9 @@
         <div class="list-group" style="margin-left: 20px;margin-top: 20px;">
             <a href="javascript:return false;" class="list-group-item list-group-item-action active" style="">兴趣小组</a>
             <%
-                for(int i=0;i<groups.size();i++){
+                for (InterestGroup group : groups) {
             %>
-            <a id="group_id_<%=groups.get(i).getGroupID()%>" href="#" class="list-group-item list-group-item-action"><%=groups.get(i).getGroupName()%></a>
+            <a id="group_id_<%=group.getGroupName()%>" role="button" href="enterChat.action?groupName=<%=group.getGroupName()%>" class="list-group-item list-group-item-action"><%=group.getGroupName()%></a >
             <%
                 }
             %>
@@ -137,7 +138,12 @@
         <div class="title">
             <div class="am-g am-g-fixed">
                 <div class="am-u-sm-12">
+                    <s:if test="#session.group_name==null">
                     <h1 class="am-text-primary">ChatRoom NoConnect!</h1>
+                    </s:if>
+                    <s:else>
+                        <h1 class="am-text-primary"><%=session.getAttribute("group_name")%></h1>
+                    </s:else>
                 </div>
             </div>
         </div>
@@ -316,72 +322,57 @@
         }
     }
 
-        // $('#send').on('click', function() {
-        //     if(message.val()===''){
-        //         //昵称框获取焦点
-        //         message.focus();
-        //         // 添加抖动效果
-        //         $('#message-input-nickname').addClass('am-animation-shake');
-        //         setTimeout("$('#message-input-nickname').removeClass('am-animation-shake')", 1000);
-        //     }else {
-        //             // 发送消息
-        //             socket.send(JSON.stringify({
-        //                 content : message.val
-        //             }));
-        //     }
-        //
-        //     // if (!um.hasContents()) {	// 判断消息输入框是否为空
-        //     //     // 消息输入框获取焦点
-        //     //     um.focus();
-        //     //     // 添加抖动效果
-        //     //     $('.edui-container').addClass('am-animation-shake');
-        //     //     setTimeout("$('.edui-container').removeClass('am-animation-shake')", 1000);
-        //     // } else if (nickname === '') {	// 判断昵称框是否为空
-        //     //     //昵称框获取焦点
-        //     //     $('#nickname')[0].focus();
-        //     //     // 添加抖动效果
-        //     //     $('#message-input-nickname').addClass('am-animation-shake');
-        //     //     setTimeout("$('#message-input-nickname').removeClass('am-animation-shake')", 1000);
-        //     // } else {
-        //     //     // 发送消息
-        //     //     socket.send(JSON.stringify({
-        //     //         content : um.getContent(),
-        //     //         nickname : nickname
-        //     //     }));
-        //     //     // 清空消息输入框
-        //     //     um.setContent('');
-        //     //     // 消息输入框获取焦点
-        //     //     um.focus();
-        //     // }
-        // });
-
     function addMessage(msg) {
         msg = JSON.parse(msg);
-        var liCss;
-        var pic;
-        if(msg.isSelf==="true"){
-            liCss='am-comment-flip';
-            pic='self.png';
-        }else {
-            liCss='am-comment';
-            pic='others.jpg';
+        if(msg.type==="message") {
+            var liCss;
+            var pic;
+            if (msg.isSelf === "true") {
+                liCss = 'am-comment-flip';
+                pic = 'self.png';
+            } else {
+                liCss = 'am-comment';
+                pic = 'others.jpg';
+            }
+            var messageItem = '<li class=" '
+                + liCss
+                + '">'
+                + '<a href="javascript:void(0)" ><img src="assets/images/'
+                + pic
+                + '" alt="" class="am-comment-avatar" width="48" height="48"/></a>'
+                + '<div class="am-comment-main"><header class="am-comment-hd"><div class="am-comment-meta">'
+                + '<a href="javascript:void(0)" class="am-comment-author">'
+                + msg.username + '</a> <time>' + msg.date
+                + '</time></div></header>'
+                + '<div class="am-comment-bd">' + msg.content
+                + '</div></div></li>';
+            $(messageItem).appendTo('#message-list');
+            // 把滚动条滚动到底部
+            $(".chat-content-container").scrollTop($(".chat-content-container")[0].scrollHeight);
+            message.value = "";
+        }else if(msg.type==="onlineUsers"){
+            var data=msg.data.replace("[","").replace("]","");
+            var d=[];
+            d=getUsers(data);
+            var insertStr="";
+            for(var i=0;i<d.length;i++){
+                insertStr+="<li class=\"list-group-item list-group-item-success\">" +
+                "<div style=\"width: 40px; height: 40px; float:left; border-radius: 50%; border: 3px solid #eee; overflow: hidden;\">" +
+                "<img src=\"assets/images/self.png\" width=\"40\" height=\"40\" /></div>&emsp;"+d[i]+"</li>";
+            }
+            var lists=$("#onlineLists");
+            lists.empty();
+            lists.append(insertStr);
         }
-        var messageItem = '<li class=" '
-            + liCss
-            + '">'
-            + '<a href="javascript:void(0)" ><img src="assets/images/'
-            + pic
-            + '" alt="" class="am-comment-avatar" width="48" height="48"/></a>'
-            + '<div class="am-comment-main"><header class="am-comment-hd"><div class="am-comment-meta">'
-            + '<a href="javascript:void(0)" class="am-comment-author">'
-            + msg.username +'</a> <time>' + msg.date
-            + '</time></div></header>'
-            + '<div class="am-comment-bd">' + msg.content
-            + '</div></div></li>';
-        $(messageItem).appendTo('#message-list');
-        // 把滚动条滚动到底部
-        $(".chat-content-container").scrollTop($(".chat-content-container")[0].scrollHeight);
-        message.value="";
+    }
+
+    function getUsers(data) {
+        var users=data.split(',');
+        return users;
+    }
+
+    function connectChat(self) {
+        var groupName=self.getAttribute("id").replace("group_id_","");
     }
 
     function encodeScript(data) {

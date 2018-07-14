@@ -180,7 +180,7 @@
                             <div class="tab-pane active show" id="panel-832269">
                                 <br />
                                 <form enctype="multipart/form-data" action="releaseProduct.action" method="post" class="form-horizontal" role="form" >
-                                    <input hidden name="groupID" value="<%=session.getAttribute("user_id")%>" />
+                                    <input hidden name="teamID" value="<%=session.getAttribute("user_id")%>" />
                                     <div class="form-group">
                                         <label for="goods">
                                             商品名:
@@ -223,7 +223,7 @@
                             <div class="tab-pane" id="panel-364800">
                                 <br />
                                 <form action="releaseActivity.action" method="post" role="form">
-                                    <input hidden name="groupID" value="<%=session.getAttribute("user_id")%>" />
+                                    <input hidden name="teamID" value="<%=session.getAttribute("user_id")%>" />
                                     <div class="form-group">
                                         <label for="activityname">
                                             活动名:

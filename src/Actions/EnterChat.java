@@ -18,6 +18,7 @@ public class EnterChat extends ActionSupport {
     @Override
     public String execute() throws Exception {
         System.out.println(groupName);
+        ActionContext.getContext().getSession().remove("group_name");
         ActionContext.getContext().getSession().put("group_name",groupName);
         return super.execute();
     }

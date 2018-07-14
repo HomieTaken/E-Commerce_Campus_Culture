@@ -83,6 +83,9 @@ public class LoginAction extends ActionSupport {
 
         ActionContext actionContext = ActionContext.getContext();
         Map<String, Object> session = actionContext.getSession();
+        session.remove("user_name");
+        session.remove("user_id");
+        session.remove("user_type");
         session.put("user_name", this.getUserName());
         session.put("user_id", userID);
         session.put("user_type", userType);

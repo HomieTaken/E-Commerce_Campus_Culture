@@ -130,7 +130,7 @@
     <ul>
 <%for(InterestGroup interestGroup:groups){%>
         <ol>
-            <a href="enterChat?groupName=<%=interestGroup.getGroupName()%>">
+            <a href="enterChat.action?groupName=<%=interestGroup.getGroupName()%>">
                 <%=interestGroup.getGroupName()%>
             </a>
         </ol>
