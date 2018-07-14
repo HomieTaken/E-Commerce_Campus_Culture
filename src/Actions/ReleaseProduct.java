@@ -25,6 +25,7 @@ public class ReleaseProduct extends ActionSupport {
     private File imgFile;
     private String imgFileFileName;
     private String imgFileContentType;
+    private String teamID;
 
     public String getImgFileContentType() {
         return imgFileContentType;
@@ -82,6 +83,14 @@ public class ReleaseProduct extends ActionSupport {
         this.imgFile = imgFile;
     }
 
+    public String getTeamID() {
+        return teamID;
+    }
+
+    public void setTeamID(String teamID) {
+        this.teamID = teamID;
+    }
+
     public boolean fileUpload(File flie) {
         FileInputStream in = null;
         Connection conn = null;
@@ -101,7 +110,7 @@ public class ReleaseProduct extends ActionSupport {
                     productName+
                     "','" +
                     productPrice+
-                    "',4,'" +
+                    "'," + this.teamID+",'" +
                     productAmount+
                     "')";
             ps = conn.prepareStatement(sql);

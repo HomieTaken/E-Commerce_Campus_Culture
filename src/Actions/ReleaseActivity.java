@@ -13,6 +13,15 @@ public class ReleaseActivity extends ActionSupport {
     private Date beginDate;
     private Date endDate;
     private String description;
+    private String teamID;
+
+    public String getTeamID() {
+        return teamID;
+    }
+
+    public void setTeamID(String teamID) {
+        this.teamID = teamID;
+    }
 
     public String getActivityAddress() {
         return activityAddress;
@@ -68,7 +77,8 @@ public class ReleaseActivity extends ActionSupport {
                 "activity_info,activity_address) " +
                 "values('" +
                 activityName+
-                "',4,date('" +
+                "'," +this.teamID+
+                ",date('" +
                 beginDate+
                 "'),date('" +
                 endDate+

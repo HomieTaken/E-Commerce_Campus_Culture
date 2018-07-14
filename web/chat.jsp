@@ -1,4 +1,8 @@
-<%--
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="Entity.InterestGroup" %>
+<%@ page import="java.sql.ResultSet" %>
+<%@ page import="DataBase.DBOperation" %>
+<%@ page import="java.sql.SQLException" %><%--
   Created by IntelliJ IDEA.
   User: Administrator
   Date: 2018/7/7/007
@@ -63,6 +67,22 @@
 
     </style>
 </head>
+<%
+    ArrayList<InterestGroup> groups=new ArrayList<>();
+    try {
+        ResultSet rs=DBOperation.getRS("select * from interest_group where group_id in (select group_id from group_members where user_id=\'"+session.getAttribute("user_id")+"\')");
+        while (rs.next()){
+            InterestGroup group=new InterestGroup();
+            group.setOwnerID(rs.getInt("group_owner_id"));
+            group.setGroupID(rs.getInt("group_id"));
+            group.setGroupName(rs.getString("group_name"));
+            group.setGroupInfo(rs.getString("group_info"));
+            groups.add(group);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+%>
 <body>
 <!-- title start -->
 <ul class="nav fixed-top" style="background-color: #6C6C6C; height:70px;">
@@ -96,12 +116,19 @@
     <div class="col-md-3">
         <div class="list-group" style="margin-left: 20px;margin-top: 20px;">
             <a href="javascript:return false;" class="list-group-item list-group-item-action active" style="">兴趣小组</a>
-            <a href="#" class="list-group-item list-group-item-action">小组1</a>
-            <a href="#" class="list-group-item list-group-item-action">小组2</a>
-            <a href="#" class="list-group-item list-group-item-action">小组3</a>
-            <a href="#" class="list-group-item list-group-item-action">小组4</a>
-            <a href="#" class="list-group-item list-group-item-action">小组5</a>
-            <a href="#" class="list-group-item list-group-item-action">小组6</a>
+            <%
+                for(int i=0;i<groups.size();i++){
+            %>
+            <a id="group_id_<%=groups.get(i).getGroupID()%>" href="#" class="list-group-item list-group-item-action"><%=groups.get(i).getGroupName()%></a>
+            <%
+                }
+            %>
+            <%--<a href="#" class="list-group-item list-group-item-action">小组1</a>--%>
+            <%--<a href="#" class="list-group-item list-group-item-action">小组2</a>--%>
+            <%--<a href="#" class="list-group-item list-group-item-action">小组3</a>--%>
+            <%--<a href="#" class="list-group-item list-group-item-action">小组4</a>--%>
+            <%--<a href="#" class="list-group-item list-group-item-action">小组5</a>--%>
+            <%--<a href="#" class="list-group-item list-group-item-action">小组6</a>--%>
         </div>
     </div>
 
@@ -110,7 +137,7 @@
         <div class="title">
             <div class="am-g am-g-fixed">
                 <div class="am-u-sm-12">
-                    <h1 class="am-text-primary"><%=session.getAttribute("group_name")%></h1>
+                    <h1 class="am-text-primary">ChatRoom NoConnect!</h1>
                 </div>
             </div>
         </div>
@@ -150,45 +177,45 @@
 
     <!--在线列表-->
     <div class="col-md-3" style="margin-top: 2%;">
-        <ul class="list-group chatul">
+        <ul class="list-group chatul" id="onlineLists">
             <li class="list-group-item list-group-item-success">
                 <div style="width: 40px; height: 40px; float:left; border-radius: 50%; border: 3px solid #eee; overflow: hidden;">
-                    <img src="img/WHUpro1.jpg" width="40" height="40" />
+                    <img src="assets/images/self.png" width="40" height="40" />
                 </div>
-                &emsp;在线成员1
+                &emsp;<%=session.getAttribute("user_name")%>
             </li>
-            <li class="list-group-item list-group-item-success">
-                <div style="width: 40px; height: 40px; float:left; border-radius: 50%; border: 3px solid #eee; overflow: hidden;">
-                    <img src="img/WHUpro2.jpg" width="40" height="40" />
-                </div>
-                &emsp;在线成员2
-            </li>
-            <li class="list-group-item list-group-item-success">
-                <div style="width: 40px; height: 40px; float:left; border-radius: 50%; border: 3px solid #eee; overflow: hidden;">
-                    <img src="img/WHUpro3.jpg" width="40" height="40" />
-                </div>
-                &emsp;在线成员3
-            </li>
-            <li class="list-group-item list-group-item-success">
-                <div style="width: 40px; height: 40px; float:left; border-radius: 50%; border: 3px solid #eee; overflow: hidden;">
-                    <img src="img/WHUpro1.jpg" width="40" height="40" />
-                </div>
-                &emsp;在线成员4
-            </li>
+            <%--<li class="list-group-item list-group-item-success">--%>
+                <%--<div style="width: 40px; height: 40px; float:left; border-radius: 50%; border: 3px solid #eee; overflow: hidden;">--%>
+                    <%--<img src="img/WHUpro2.jpg" width="40" height="40" />--%>
+                <%--</div>--%>
+                <%--&emsp;在线成员2--%>
+            <%--</li>--%>
+            <%--<li class="list-group-item list-group-item-success">--%>
+                <%--<div style="width: 40px; height: 40px; float:left; border-radius: 50%; border: 3px solid #eee; overflow: hidden;">--%>
+                    <%--<img src="img/WHUpro3.jpg" width="40" height="40" />--%>
+                <%--</div>--%>
+                <%--&emsp;在线成员3--%>
+            <%--</li>--%>
+            <%--<li class="list-group-item list-group-item-success">--%>
+                <%--<div style="width: 40px; height: 40px; float:left; border-radius: 50%; border: 3px solid #eee; overflow: hidden;">--%>
+                    <%--<img src="img/WHUpro1.jpg" width="40" height="40" />--%>
+                <%--</div>--%>
+                <%--&emsp;在线成员4--%>
+            <%--</li>--%>
 
 
-            <li class="list-group-item list-group-item-light">
-                <div style="width: 40px; height: 40px; float:left; border-radius: 50%; border: 3px solid #eee; overflow: hidden;">
-                    <img class="grayimg" src="img/WHUpro1.jpg" width="40" height="40" />
-                </div>
-                &emsp;不在线成员1
-            </li>
-            <li class="list-group-item list-group-item-light">
-                <div style="width: 40px; height: 40px; float:left; border-radius: 50%; border: 3px solid #eee; overflow: hidden;">
-                    <img class="grayimg" src="img/WHUpro1.jpg" width="40" height="40" />
-                </div>
-                &emsp;不在线成员2
-            </li>
+            <%--<li class="list-group-item list-group-item-light">--%>
+                <%--<div style="width: 40px; height: 40px; float:left; border-radius: 50%; border: 3px solid #eee; overflow: hidden;">--%>
+                    <%--<img class="grayimg" src="img/WHUpro1.jpg" width="40" height="40" />--%>
+                <%--</div>--%>
+                <%--&emsp;不在线成员1--%>
+            <%--</li>--%>
+            <%--<li class="list-group-item list-group-item-light">--%>
+                <%--<div style="width: 40px; height: 40px; float:left; border-radius: 50%; border: 3px solid #eee; overflow: hidden;">--%>
+                    <%--<img class="grayimg" src="img/WHUpro1.jpg" width="40" height="40" />--%>
+                <%--</div>--%>
+                <%--&emsp;不在线成员2--%>
+            <%--</li>--%>
         </ul>
     </div>
 </div>
