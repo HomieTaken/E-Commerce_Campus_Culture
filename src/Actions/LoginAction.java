@@ -74,23 +74,32 @@ public class LoginAction extends ActionSupport {
 //            DBOperation.close();
 //            return ERROR;
 //        } else {
-            ResultSet rs=DBOperation.getRS("select user_type from user where user_name='"+userName+"'");
-            if(rs.next()){
-                userType=rs.getNString(1);
-            }
-//            if(userType==null||(!userType.equals("INDIVIDUAL")&&!userType.equals("TEAM")))
-//                return ERROR;
-            ActionContext actionContext = ActionContext.getContext();
-            Map<String, Object> session = actionContext.getSession();
-            session.put("user_name", this.getUserName());
-            //ActionContext.getContext().getSession().put("login", user.getUserName());
-            DBOperation.close();
-            System.out.println("登陆成功");
-            if(userType.equals("INDIVIDUAL"))
-                return SUCCESS;
-            else return ERROR;
-//        }
-//        return super.execute();
+        int userID = 0;
+        ResultSet rs = DBOperation.getRS("select user_type,user_id from user where user_name='" + userName + "'");
+        if (rs.next()) {
+            userType = rs.getNString(1);
+            userID = rs.getInt(2);
+        }
+
+        ActionContext actionContext = ActionContext.getContext();
+        Map<String, Object> session = actionContext.getSession();
+        session.put("user_name", this.getUserName());
+        session.put("user_id", userID);
+        session.put("user_type", userType);
+        //ActionContext.getContext().getSession().put("login", user.getUserName());
+        DBOperation.close();
+        System.out.println("登陆成功");
+        switch (userType.toUpperCase()) {
+            case "INDIVIDUAL":
+                return "individual";
+            case "TEAM":
+                return "team";
+            case "SCHOOL":
+                return "school";
+            default:
+                return INPUT;
+        }
+
     }
 
 }

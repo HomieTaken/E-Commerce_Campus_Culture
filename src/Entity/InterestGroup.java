@@ -5,16 +5,8 @@ import java.util.ArrayList;
 public class InterestGroup {
     private int ownerID;
     private int groupID;
-    private ArrayList<Integer> members;             //对应的id，members对应user
-    private ArrayList<ChatRecord> records;
-
-    public void addMember(User user){
-        members.add(user.getId());
-    }
-
-    public void addRecord(ChatRecord record){
-        records.add(record);
-    }
+    private String groupName;
+    private String groupInfo;
 
     public int getGroupID() {
         return groupID;
@@ -32,19 +24,19 @@ public class InterestGroup {
         this.ownerID = ownerID;
     }
 
-    public ArrayList<Integer> getMembers() {
-        return members;
+    public String getGroupName() {
+        return groupName;
     }
 
-    public void setMembers(ArrayList<Integer> members) {
-        this.members = members;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
-    public ArrayList<ChatRecord> getRecords() {
-        return records;
+    public String getGroupInfo() {
+        return groupInfo;
     }
 
-    public void setRecords(ArrayList<ChatRecord> records) {
-        this.records = records;
+    public void setGroupInfo(String groupInfo) {
+        this.groupInfo = groupInfo;
     }
 }

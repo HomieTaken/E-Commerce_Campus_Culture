@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+    <package name="school-manager" extends="struts-default">
+        <action name="deleteATeam" class="Actions.SchoolTeamsManagement" method="deleteTeam">
+            <result name="ajax_delete" type="stream">
+                <param name="contentType">text/html</param>
+                <param name="inputStream">inputStream</param>
+            </result>
+        </action>
+        <action name="dealApply" class="Actions.SchoolTeamsManagement" method="dealApplication">
+            <result type="stream" name="ajax_deal">
+                <param name="contentType">text/html</param>
+                <param name="inputStream">inputStream</param>
+            </result>
+        </action>
+    </package>
+</struts>

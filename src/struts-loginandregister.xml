@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+    <package name="loginAndRegister" extends="struts-default">
+        <action name="user_checkName" class="Actions.RegisterCheck" method="registerCheck">
+            <result type="stream" name="ajax_succ">
+                <param name="contentType">text/html</param>
+                <param name="inputStream">inputStream</param>
+            </result>
+        </action>
+        <action name="register" class="Actions.RegisterAction">
+            <result name="error">/register.jsp</result>
+            <result>/login.jsp</result>
+        </action>
+        <action name="login" class="Actions.LoginAction" method="execute">
+            <result name="individual">/index.jsp</result>
+            <result name="team">/teamPage.jsp</result>
+            <result name="input">/login.jsp</result>
+            <result name="school">/schooluser.jsp</result>
+        </action>
+        <action name="logout" class="Actions.LogoutAction">
+            <result name="success">/index.jsp</result>
+        </action>
+    </package>
+</struts>

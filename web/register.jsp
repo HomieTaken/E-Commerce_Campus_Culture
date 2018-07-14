@@ -1,3 +1,6 @@
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.sql.ResultSet" %>
+<%@ page import="DataBase.DBOperation" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <%--
   Created by IntelliJ IDEA.
@@ -8,6 +11,13 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
+<%
+    ArrayList<String> schools=new ArrayList<>();
+    ResultSet rs=DBOperation.getRS("select school_name from school");
+    while (rs.next()){
+        schools.add(rs.getString(1));
+    }
+%>
 <head>
     <title>青芒-注册</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -84,11 +94,13 @@
 			</span>
 			</span>
             <select name ="school" class="form-control" style="border-top-right-radius: 20px; border-bottom-right-radius:20px;">
-                <option >武汉大学</option>
-                <option>华中科技大学</option>
-                <option>湖北大学</option>
-                <option>中国科技大学</option>
-                <option>南京大学</option>
+                <%
+                    for (String schoolName:schools){
+                %>
+                <option ><%=schoolName%></option>
+                <%
+                    }
+                %>
             </select>
         </div>
         <br />
@@ -190,6 +202,7 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/jquery-3.3.1.js"></script>
 <script type="text/javascript">
+    var validate;
     $(function() {
         $("#username").blur(function() {
             var val = $(this).val();
@@ -207,6 +220,7 @@
                 };
                 $.post(url, args, function(data) {
                     //表示可用
+                    validate = data;
                     if (data === "1") {
                         name.after("<font color='green'>*用户名可用!</font>");
                     }
@@ -310,7 +324,8 @@
                 document.getElementById("email").removeChild(findNodes2[0]);
             }
         }
-
+        if(validate!=="1")
+            return false;
         document.forms[0].submit();
     }
 </script>

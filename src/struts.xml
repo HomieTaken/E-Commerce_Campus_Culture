@@ -8,37 +8,13 @@
     <constant name="struts.devMode" value="true" />
     <constant name="struts.multipart.saveDir" value="/tmp"/>
     <constant name="struts.action.excludePattern" value="/ws/.*,ws://.*"/>
+    <include file="struts-loginandregister.xml"/>
     <package name="data" extends="struts-default">
         <action name="index">
             <result name="success">/index.jsp</result>
         </action>
 
-        <action name="user_checkName" class="Actions.RegisterCheck" method="registerCheck">
-            <result type="stream" name="ajax_succ">
-                <param name="contentType">text/html</param>
-                <param name="inputStream">inputStream</param>
-            </result>
-        </action>
-        <!--<action name="user_checkName" class="Actions.RegisterCheck" method="{1}">-->
-            <!--<result type="stream" name="ajax_succ">-->
-                <!--<param name="contentType">text/html</param>-->
-                <!--<param name="inputStream">inputStream</param>-->
-            <!--</result>-->
-        <!--</action>-->
 
-        <action name="register" class="Actions.RegisterAction">
-            <result name="input">/register.jsp</result>
-            <result>/login.jsp</result>
-        </action>
-
-        <action name="login" class="Actions.LoginAction" method="execute">
-            <result name="success">/index.jsp</result>
-            <result name="error">/teamPage.jsp</result>
-            <result name="input">/login.jsp</result>
-        </action>
-        <action name="logout" class="Actions.LogoutAction">
-            <result name="success">/index.jsp</result>
-        </action>
 
         <action name="navigationSwitch" class="Actions.NavigationSwitch" method="execute">
             <result name="success">/index.jsp</result>
@@ -68,5 +44,10 @@
 
         <action name="getPic" class="Actions.GetPicResource"  method="execute">
         </action>
+
+        <action name="enterChat" class="Actions.EnterChat">
+            <result>chat.jsp</result>
+        </action>
     </package>
+    <include file="struts-schoolmanager.xml"/>
 </struts>

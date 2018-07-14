@@ -15,6 +15,8 @@
           <fileset id="s2fileset" name="Default File Set " removed="false">
             <file>file://$MODULE_DIR$/src/struts.xml</file>
             <file>jar://D:/struts-2.5.8/lib/struts2-core-2.5.8.jar!/struts-default.xml</file>
+            <file>file://$MODULE_DIR$/src/struts-schoolmanager.xml</file>
+            <file>file://$MODULE_DIR$/src/struts-loginandregister.xml</file>
           </fileset>
           <propertiesKeys disabled="false" />
         </configuration>

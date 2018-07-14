@@ -7,6 +7,7 @@ import com.opensymphony.xwork2.ActionSupport;
 
 import java.io.IOException;
 import java.sql.ResultSet;
+import java.util.Date;
 
 public class RegisterAction extends ActionSupport {
     private String name;
@@ -90,58 +91,66 @@ public class RegisterAction extends ActionSupport {
             if(rs.next()){
                 addFieldError("userNameMsg","用户名已存在！");
                 DBOperation.close();
-                return NONE;
+                return ERROR;
             }
         }catch (Exception e){
             e.printStackTrace();
-            return NONE;
+            return ERROR;
         }
         System.out.println(this.userType);
         System.out.println(this.school);
+
         String type;//获得用户类型
-        if (userType == null)
-            return INPUT;
         if (this.getUserType().equals("singerUser"))
-            type = UserType.INDIVIDUAL.toString();
+            type = UserType.INDIVIDUAL.toString().toUpperCase();
         else
-            type = UserType.TEAM.toString();
+            type = UserType.TEAM.toString().toUpperCase();
 
         System.out.println(type);
-//        int newNO = 0;
-        //ResultSet rs1 = DBOperation.getRS("select * from user where user_name='"+this.getName()+"'");
-//        ResultSet rs2 = DBOperation.getRS("select max(user_id) from user ");
-//        if(!rs2.next())
-//        {
-//            newNO = rs2.getInt("max(user_id)") + 1;//获得用户id
-//        }
-//        if(rs1.next())
-//        {
-//            System.out.println("用户名已存在");
-//            DBOperation.close();
-//            return INPUT;
-//        }else{
-//          if (type.equals("singerUser"))//个人用户,正常注册
-//          {
-//
-//              return "success";
-//          }
-//         else if(type.equals("teamUser"))//团体用户,验证??
-//          {
-//              return "success";
-//          }
+
         if (!type.isEmpty() && !this.getName().isEmpty() && !this.getEmail().isEmpty() && !this.getPassword().isEmpty() && !this.getSchool().isEmpty()) {
-            String sql = "insert into user(user_name,user_email,user_password,user_school_name,user_type) values('" + this.getName() + "','" + this.getEmail() + "','" + this.getPassword() + "','" + this.getSchool() + "','" + type.toUpperCase() + "')";
-            int ret = DBOperation.Update(sql);
-            DBOperation.close();
-            if (ret != 0) {
-                System.out.println("注册成功");
-                return SUCCESS;
-            } else {
-                System.out.println("注册失败");
+            switch (type) {
+                case "TEAM": {
+                    String sql = "insert into team_apply(team_name,team_email,team_password,team_school_name,team_apply_time)" +
+                            " values(\'" + this.getName() +
+                            "\',\'" + this.getEmail() +
+                            "\',\'" + this.getPassword() +
+                            "\',\'" + this.getSchool() +
+                            "\',\'" + ChatServer.DATE_FORMAT.format(new Date()) +
+                            "\')";
+                    int ret = DBOperation.Update(sql);
+                    DBOperation.close();
+                    if (ret != 0) {
+                        System.out.println("申请成功");
+                        return SUCCESS;
+                    } else {
+                        System.out.println("申请失败");
+                        return ERROR;
+                    }
+                }
+                case "INDIVIDUAL": {
+                    String sql = "insert into user(user_name,user_email,user_password,user_school_name,user_type) " +
+                            "values(\'" + this.getName() +
+                            "\',\'" + this.getEmail() +
+                            "\',\'" + this.getPassword() +
+                            "\',\'" + this.getSchool() +
+                            "\',\'" + type + "\')";
+                    int ret = DBOperation.Update(sql);
+                    DBOperation.close();
+                    if (ret != 0) {
+                        System.out.println("注册成功");
+                        return SUCCESS;
+                    } else {
+                        System.out.println("注册失败");
+                        return ERROR;
+                    }
+                }
+                default:
+                    return ERROR;
             }
         } else {
             System.out.println("有信息为空");
+            return ERROR;
         }
-        return INPUT;
     }
 }

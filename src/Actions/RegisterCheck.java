@@ -30,7 +30,8 @@ public class RegisterCheck extends ActionSupport implements ModelDriven<User> {
         String userName=user.getUserName();
         try {
             ResultSet rs = DBOperation.getRS("select * from user where user_name='" + user.getUserName() + "'");
-            if (rs.next()) {
+            ResultSet resultSet=DBOperation.getRS("select * from team_apply where team_name=\'"+user.getUserName()+"\'");
+            if (rs.next()||resultSet.next()) {
                 inputStream = new ByteArrayInputStream("0".getBytes("UTF-8"));
                 ActionContext.getContext().getSession().remove("user_register_check");
                 ActionContext.getContext().getSession().put("user_register_check","false");

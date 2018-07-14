@@ -9,8 +9,6 @@ public class DBConnect {
     //加载驱动，连接数据库
     public static Connection getConnection() {
         try{
-            conn=null;
-
             String driver = "com.mysql.jdbc.Driver";
             Class.forName(driver);
 

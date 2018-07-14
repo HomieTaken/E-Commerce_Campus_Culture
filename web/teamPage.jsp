@@ -29,8 +29,9 @@
 </head>
 <%
 //    session.getAttribute("user_id");
-    String sqlProduct="select * from product where product_team_id=4";
-    String sqlActivity="select * from activity where activity_team_id=4";
+    int id=(int) session.getAttribute("user_id");
+    String sqlProduct="select * from product where product_team_id="+id;
+    String sqlActivity="select * from activity where activity_team_id="+id;
     ArrayList<CultureProduct> products=new ArrayList<>();
     ArrayList<Activity> activities=new ArrayList<>();
     try {

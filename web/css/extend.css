@@ -1,0 +1,77 @@
+.dropdown-more {
+  position: relative;
+  display: inline-block;
+}
+.dropdown-content-more {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 140px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 10px 0px;
+  left:-5px;
+  top:-10px;
+}
+.dropdown-more:hover .dropdown-content-more {
+  display: block;
+}
+
+.caught{
+	float: left;
+}
+
+.caught a:hover:not(.active) {
+    background-color: #D0D0D0;
+}
+
+div.border-change {
+			margin-left: 20px;
+			border: 1px solid #ccc;
+			width: 240px;
+		}
+
+div.border-change:hover {
+			border: 1px solid #FF0000;
+		}
+
+div.border-change img {
+			width: 100%;
+			height: auto;
+		}
+
+div.desc {
+	padding:10px;
+}
+
+.prolist-price{
+	margin-left:10px;
+	margin-top:10px;
+	font-weight:bold;
+}
+
+.vertical-ul{
+    list-style-type: none;
+    padding: 0;
+    width: 16%;
+    background-color: #f1f1f1;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+}
+ 
+.vertical-li a {
+    display: block;
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+.vertical-li a.homepg{
+    background-color: #4CAF50;
+    color: white;
+}
+
+.vertical-li a:hover:not(.homepg) {
+    background-color: #555;
+    color: white;
+}

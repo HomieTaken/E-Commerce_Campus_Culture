@@ -1,4 +1,8 @@
-<%--
+<%@ page import="java.sql.ResultSet" %>
+<%@ page import="DataBase.DBOperation" %>
+<%@ page import="java.sql.SQLException" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="Entity.InterestGroup" %><%--
   Created by IntelliJ IDEA.
   User: Administrator
   Date: 2018/7/4/004
@@ -24,6 +28,22 @@
     <%--<link href="css/style.css" rel="stylesheet">--%>
 
 </head>
+<%  int userID=(int) session.getAttribute("user_id");
+    ArrayList<InterestGroup> groups=new ArrayList<>();
+    try {
+        ResultSet rs=DBOperation.getRS("select * from interest_group where group_id in (select group_id from group_members where user_id="+userID+")");
+        while (rs.next()){
+            InterestGroup group=new InterestGroup();
+            group.setGroupID(rs.getInt(1));
+            group.setGroupName(rs.getString(2));
+            group.setGroupInfo(rs.getString(3));
+            group.setOwnerID(rs.getInt(4));
+            groups.add(group);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+%>
 <body>
 
 <div class="container-fluid">
@@ -106,6 +126,18 @@
         </div>
     </div>
 </div>
+<div>
+    <ul>
+<%for(InterestGroup interestGroup:groups){%>
+        <ol>
+            <a href="enterChat?groupName=<%=interestGroup.getGroupName()%>">
+                <%=interestGroup.getGroupName()%>
+            </a>
+        </ol>
+<%}%>
+    </ul>
+</div>
+
 
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
