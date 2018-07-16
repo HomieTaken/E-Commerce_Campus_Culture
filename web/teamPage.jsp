@@ -3,7 +3,13 @@
 <%@ page import="java.sql.SQLException" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="Entity.CultureProduct" %>
-<%@ page import="Entity.Activity" %><%--
+<%@ page import="Entity.Activity" %>
+<%@ page import="Entity.Message" %>
+<%@ page import="Operations.MessageOperate" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<%--
   Created by IntelliJ IDEA.
   User: Administrator
   Date: 2018/7/5/005
@@ -25,15 +31,17 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
     <link href="css/bootstrap.css" rel="stylesheet">
-
+    <script src="js/server-01.js"></script>
 </head>
+
+
 <%
 //    session.getAttribute("user_id");
-    int id=(int) session.getAttribute("user_id");
+    Object id=request.getSession().getAttribute("user_id");
     String sqlProduct="select * from product where product_team_id="+id;
     String sqlActivity="select * from activity where activity_team_id="+id;
-    ArrayList<CultureProduct> products=new ArrayList<>();
-    ArrayList<Activity> activities=new ArrayList<>();
+    ArrayList<CultureProduct> products=new ArrayList<CultureProduct>();
+    ArrayList<Activity> activities=new ArrayList<Activity>();
     try {
         ResultSet rsProduct=DBOperation.getRS(sqlProduct);
         while (rsProduct.next()){
@@ -65,7 +73,22 @@
     }
 %>
 <body>
+<!--修改by:zheng---->
+<%
+    Object userID;
+    if(request.getSession().getAttribute("user_name")!=null) {
+        userID =  request.getSession().getAttribute("user_id");
+        if (request.getSession().getAttribute("message_count")!=null) {
+            int count = MessageOperate.getNewMessageNum((Integer)userID);
+            request.getSession().setAttribute("message_count", count);
+        }
+    }%>
 
+<!------------------------------------------------------------------------------------------->
+
+<%if(request.getSession().getAttribute("user_id")!=null){%>
+<script>createConn();</script>
+<%}%>
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" >
     <ol class="breadcrumb" style="background-color: #CAFFFF; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-left-radius:5px; border-bottom-right-radius:5px; box-shadow: 10px 10px 5px #888888;">
         <div class="row">
@@ -81,9 +104,36 @@
                 </li>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-5">
 
             </div>
+
+
+            <!------------------------------------------------------->
+            <!---消息显示按钮-->
+            <s:if test="#session.message_count!=null">
+                <div class="col-md-1" style="margin-left:0px;margin-top: 0px;">
+                    <a href="enterTeamBox.action"><button type="button" class="btn btn-info">
+                        <span class="glyphicon glyphicon-envelope"></span>
+                    </button></a>
+                </div></a>
+
+                <div id="messageCircle" class="badge-bg" style="margin-left:-70px;margin-top:10px;z-index:2; width:20px;
+    height:20px;
+    background-color:#F00;
+    border-radius:25px;display:none;">
+                            <span id="message_count" class="badge-span" style="    height:20px;
+    line-height:20px;
+    display:block;
+    color:#FFF;
+    text-align:center;"><s:if test="#session.message_count>0">
+                                <s:property value="#session.message_count"/></s:if></span>
+                </div>
+                <s:if test="#session.message_count>0">
+                    <script>document.getElementById("messageCircle").style.display=""</script></s:if>
+            </s:if>
+            <!---------------------------------------------->
+
 
             <div class="col-md-2">
                 <li class="breadcrumb-item ">
@@ -92,8 +142,9 @@
                             <span class="glyphicon glyphicon-user"></span>&emsp; 已登录
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item disabled" href="#">Action</a>
-                            <a class="dropdown-item" href="">修改信息</a>
+                            <!--a class="dropdown-item" href="">修改信息</a-->
+                            <!---------------------------合代码原上改下--------------------------->
+                            <a class="dropdown-item" href="#modal-update" class="dropdown-item" data-toggle="modal" style="height:30px;">修改信息</a>
                             <a class="dropdown-item" href="logout.action">退出登录</a>
                         </div>
                     </div>
@@ -104,7 +155,79 @@
     </ol>
 </nav>
 <br /><br /><br /><br />
+<!-----------------------------------合代码新增----------------------------------------->
+<div class="row">
+    <div class="col-md-12">
+<!---------------------------------------此处myModalLabe2原为myModalLabe1 因重名修改---------------------------------------->
+        <div class="modal fade" id="modal-update" role="dialog" aria-labelledby="myModalLabe2" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="myModalLabe2">
+                            修改用户<b><%=(String)session.getAttribute("user_name")%></b>的信息
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!--修改信息页面主体-->
+                        <form action="update_user_info.action" role="form" class="form-horizontal">
 
+                            <br />
+                            <div class="input-group col-sm-10 " style="margin-left:10%">
+									<span class="input-group-addon" style="border-top-left-radius: 20px; border-bottom-left-radius:20px;">
+									<span class="glyphicon glyphicon-user">
+									</span>
+									</span>
+                                <input name="name" style="border-top-right-radius: 20px; border-bottom-right-radius:20px;" type="text" class="form-control" id="username" placeholder="修改昵称">
+                                <em id="name"></em>
+                            </div>
+                            <br />
+                            <div class="input-group col-sm-10" style="margin-left:10%">
+									<span class="input-group-addon" style="border-top-left-radius: 20px; border-bottom-left-radius:20px;">
+									<span class="glyphicon glyphicon-lock">
+									</span>
+									</span>
+                                <input name = "password" style="border-top-right-radius: 20px; border-bottom-right-radius:20px;" id="userpwd1" placeholder="修改密码" type="password" class="form-control">
+                                <em id="pwd1"></em>
+                            </div>
+                            <br />
+                            <div class="input-group col-sm-10" style="margin-left:10%">
+									<span class="input-group-addon" style="border-top-left-radius: 20px; border-bottom-left-radius:20px;">
+									<span class="glyphicon glyphicon-lock">
+									</span>
+									</span>
+                                <input  style="border-top-right-radius: 20px; border-bottom-right-radius:20px;" id="userpwd2" placeholder="确认密码" type="password" class="form-control">
+                                <em id="pwd2"></em>
+                            </div>
+                            <br />
+                            <div class="input-group col-sm-10" style="margin-left:10%">
+									<span class="input-group-addon" style="border-top-left-radius: 20px; border-bottom-left-radius:20px;">
+									<span class="glyphicon glyphicon-envelope">
+									</span>
+									</span>
+                                <input name = "email" style="border-top-right-radius: 20px; border-bottom-right-radius:20px;" id="useremail" placeholder="修改邮箱" type="email" class="form-control">
+                                <em id="email"></em>
+                            </div>
+                            <br />
+                            <div class="form-group" style="margin-left:34%">
+                                <div class="col-sm-offset-2 col-md-6">
+                                    <button type="submit" class="btn btn-info btn-block" onclick="return checkRegister()">确认修改</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<!---------------------------------------------------------------------------->
 <div class="container-fluid">
 
 
@@ -145,10 +268,6 @@
                         <%for (CultureProduct product:products) {%>
                             <tr><td><%=product.getName()%></td><td>￥<%=product.getPrice()%></td><td><%=product.getAmount()%></td></tr>
                         <%}%>
-                        <%--<tr><td>产品 A</td><td>￥200</td><td>10</td></tr>--%>
-                        <%--<tr><td>产品 B</td><td>￥400</td><td>20</td></tr>--%>
-                        <%--<tr><td>产品 B</td><td>￥100</td><td>19</td></tr>--%>
-                        <%--<tr><td>产品 B</td><td>￥50</td><td>50</td></tr>--%>
                     </table>
                 </div>
                 <div class="card-footer">
@@ -269,7 +388,6 @@
                     <br />
                 </div>
             </div>
-
             <!--已发布活动-->
             <br />
             <div id="publishedact" class="card" style="overflow:hidden; border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-left-radius:20px; border-bottom-right-radius:20px; box-shadow: 10px 10px 5px #888888;">
@@ -278,18 +396,86 @@
                 </div>
                 <div class="card-body">
                     <table class="table">
-                        <th>活动名</th><th>活动地点</th><th>开始时间</th><th>结束时间</th>
+                        <th>活动名</th><th>活动地点</th><th>开始时间</th><th>结束时间</th><th>管理动态</th>
                         <%for (Activity activity:activities){%>
-                            <tr><td><%=activity.getActivityName()%></td><td><%=activity.getAddress()%></td><td><%=activity.getReleaseDate()%></td><td><%=activity.getEndDate()%></td></tr>
+                            <tr><td><%=activity.getActivityName()%></td><td><%=activity.getAddress()%></td><td><%=activity.getReleaseDate()%></td><td><%=activity.getEndDate()%></td>
+                                <td><a href="#modal-pubact" onclick="changeActivity(<%=activity.getActivityID()%>)" role="button" class="btn btn-outline-info"
+                                       data-toggle="modal" style="height:30px; margin-left:0px">
+                                    <span class="glyphicon glyphicon-bell"></span></a>
+                                </td>
+                            </tr>
                         <%}%>
-                        <%--<tr><td>活动1</td><td>珞珈山</td><td>9-01</td><td>9-02</td></tr>--%>
-                        <%--<tr><td>活动2</td><td>珞珈创意城</td><td>9-05</td><td>9-07</td></tr>--%>
                     </table>
                 </div>
                 <div class="card-footer">
                     <br />
                 </div>
             </div>
+            <!--发布活动遮罩窗-->
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="modal fade" id="modal-pubact" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content" style="width: 800px;margin-left: -28%">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="myModalLabel">
+                                        发布推送
+                                    </h5>
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <!---------------在此处添加-------------->
+                                    <table id="GetResources" class="table">
+                                        <!--th>序号</th><th>动态内容 </th>
+                                        <tr><td>1</td><td><div style='width:250px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;' title='详细推送内容详细推送内容详细推送内容详细推送内容详细推送内容详细推送内容'>详细推送内容详细推送内容详细推送内容详细推送内容详细推送内容详细推送内容</div></td></tr>
+                                        <tr><td>2</td><td><div style='width:120px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;' title='详细推送内容详细推送内容详细推送内容详细推送内容详细推送内容详细推送内容'>详细推送内容详细推送内容详细推送内容详细推送内容详细推送内容详细推送内容</div></td></tr-->
+                                    </table>
+
+                                    <form role="form"  enctype="multipart/form-data" method="post" class="form-horizontal" action="sendMessage.action">
+                                        <input type="hidden" id="change-activity" name="updateActivity" value="" />
+                                        <br />
+                                        <div class="input-group">
+                                            <span class="col-md-3" style="margin-left:10px">推送内容:</span>
+                                            <textarea class="form-control" name="updateMessage" style="left:-90px; border-top-left-radius: 5px;
+                                             border-top-right-radius: 5px;border-bottom-left-radius:5px;
+                                              border-bottom-right-radius:5px;" placeholder="活动动态内容"></textarea>
+                                        </div>
+                                        <br>
+                                        <div class="input-group">
+
+                                            <label for="pictureFile">
+                                                添加图片说明：
+                                            </label>
+                                            <input type="file" name="pictureFile" class="form-control-file" id="pictureFile" />
+                                            <!--input type="file" name="updatePictureFile" class="form-control-file" id="exampleInputFile" /-->
+                                        </div>
+                                        <br />
+                                        <div class="form-group" style="margin-left:34%">
+                                            <div class="col-sm-offset-2 col-md-6">
+                                                <button type="submit" class="btn btn-warning btn-block">发布</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                        取消
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <!--------------------------------->
         </div>
     </div>
 </div>
@@ -312,257 +498,26 @@
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/scripts.js"></script>
+<script>
+    function changeActivity(id){
+        document.getElementById("change-activity").setAttribute("value",id);
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {
+            // IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+            xmlhttp=new XMLHttpRequest();
+        }
+        else
+        {
+            // IE6, IE5 浏览器执行代码
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.open("GET","getActivityResources?activity_id="+id,false);
+        xmlhttp.send();
+        document.getElementById("GetResources").innerHTML=xmlhttp.responseText;
+    }
+</script>
+
+
 </body>
 </html>
-<%--<html lang="en">--%>
-<%--<head>--%>
-    <%--<meta charset="utf-8">--%>
-    <%--<meta http-equiv="X-UA-Compatible" content="IE=edge">--%>
-    <%--<meta name="viewport" content="width=device-width, initial-scale=1">--%>
-
-    <%--<title>Bootstrap 4, from LayoutIt!</title>--%>
-
-    <%--<meta name="description" content="Source code generated using layoutit.com">--%>
-    <%--<meta name="author" content="LayoutIt!">--%>
-
-    <%--<link href="css/bootstrap.min.css" rel="stylesheet">--%>
-    <%--&lt;%&ndash;<link href="css/style.css" rel="stylesheet">&ndash;%&gt;--%>
-
-<%--</head>--%>
-<%--<body>--%>
-
-<%--<div class="container-fluid">--%>
-    <%--<div class="row">--%>
-        <%--<div class="col-md-9">--%>
-            <%--<br>--%>
-            <%--<div class="row-fluid">--%>
-                <%--<div class="span12">--%>
-                    <%--<div class="page-header">--%>
-                        <%--<h2>--%>
-                            <%--<em>青芒 <small>一个年轻的校园文化电子商务平台</small></em>--%>
-                        <%--</h2>--%>
-                    <%--</div>--%>
-                <%--</div>--%>
-            <%--</div>--%>
-            <%--<br>--%>
-        <%--</div>--%>
-
-        <%--<div class="col-md-1">--%>
-            <%--<br>--%>
-            <%--<a id="modal-739657" href="#modal-container-739657" role="button" class="btn" data-toggle="modal">设置</a>--%>
-
-            <%--<div class="modal fade" id="modal-container-739657" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">--%>
-                <%--<div class="modal-dialog" role="document">--%>
-                    <%--<div class="modal-content">--%>
-                        <%--<div class="modal-header">--%>
-                            <%--<h5 class="modal-title" id="myModalLabel">--%>
-                                <%--更改团队设置--%>
-                            <%--</h5>--%>
-                            <%--<button type="button" class="close" data-dismiss="modal">--%>
-                                <%--<span aria-hidden="true">×</span>--%>
-                            <%--</button>--%>
-                        <%--</div>--%>
-                        <%--<div class="modal-body">--%>
-                            <%--<form class="form-horizontal" role="form">--%>
-                                <%--<div class="form-group">--%>
-                                    <%--<label for="chteamname">--%>
-                                        <%--更改团队名:--%>
-                                    <%--</label>--%>
-                                    <%--<input type="text" class="form-control" id="chteamname">--%>
-                                <%--</div>--%>
-                                <%--<button type="submit" class="btn btn-primary">--%>
-                                    <%--保存更改--%>
-                                <%--</button>--%>
-
-                            <%--</form>--%>
-                        <%--</div>--%>
-                        <%--<div class="modal-footer">--%>
-                            <%--<button type="button" class="btn btn-secondary" data-dismiss="modal">--%>
-                                <%--关闭--%>
-                            <%--</button>--%>
-                        <%--</div>--%>
-                    <%--</div>--%>
-
-                <%--</div>--%>
-
-            <%--</div>--%>
-        <%--</div>--%>
-
-        <%--<div class="col-md-2">--%>
-            <%--<br>--%>
-            <%--<a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown">xx小组在线</a>--%>
-            <%--<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">--%>
-                <%--<a class="dropdown-item" href="#">来自xx大学</a>--%>
-                <%--<a class="dropdown-item" href="#">粉丝 999</a>--%>
-                <%--<div class="dropdown-divider">--%>
-                <%--</div>--%>
-                <%--<a class="dropdown-item" href="#">退出登录</a>--%>
-            <%--</div>--%>
-
-        <%--</div>--%>
-    <%--</div>--%>
-
-    <%--<div class="row">--%>
-        <%--<div class="col-md-6">--%>
-            <%--<div class="tabbable" id="tabs-607311">--%>
-
-                <%--<ul class="nav nav-tabs">--%>
-                    <%--<li class="nav-item ">--%>
-                        <%--<a class="nav-link active show" href="#panel-832269" data-toggle="tab">发布商品</a>--%>
-                    <%--</li>--%>
-                    <%--<li class="nav-item">--%>
-                        <%--<a class="nav-link" href="#panel-364800" data-toggle="tab">发布活动</a>--%>
-                    <%--</li>--%>
-                <%--</ul>--%>
-
-                <%--<div class="tab-content">--%>
-                    <%--<div class="tab-pane active show" id="panel-832269">--%>
-                        <%--<br />--%>
-                        <%--<form enctype="multipart/form-data" action="releaseProduct.action" method="post" class="form-horizontal" role="form" >--%>
-                            <%--<div class="form-group">--%>
-                                <%--<label for="goods">--%>
-                                    <%--商品名:--%>
-                                <%--</label>--%>
-                                <%--<input name="productName" type="text" class="form-control" id="goods">--%>
-                            <%--</div>--%>
-                            <%--<div class="form-group">--%>
-                                <%--<label for="goodsprice">--%>
-                                    <%--商品价格:--%>
-                                <%--</label>--%>
-                                <%--<input name="productPrice" type="number" class="form-control" id="goodsprice">--%>
-                            <%--</div>--%>
-                            <%--<div class="form-group">--%>
-                                <%--<label for="goodsnum">--%>
-                                    <%--商品数量:--%>
-                                <%--</label>--%>
-                                <%--<input name="productAmount" type="number" class="form-control" id="goodsnum">--%>
-                            <%--</div>--%>
-                            <%--<div class="form-group">--%>
-                                <%--<label for="goodsdescription">--%>
-                                    <%--商品描述:--%>
-                                <%--</label>--%>
-                                <%--<textarea name="description" cols="4" class="form-control" id="goodsdescription">输入商品描述</textarea>--%>
-                            <%--</div>--%>
-
-                            <%--<div class="form-group">--%>
-                                <%--<label for="picture">--%>
-                                    <%--上传图片--%>
-                                <%--</label>--%>
-                                <%--<input name="imgFile" type="file" class="form-control-file" id="picture" onchange="fileChooser(this)">--%>
-                            <%--</div>--%>
-
-                            <%--<button type="submit" class="btn btn-primary">--%>
-                                <%--发布--%>
-                            <%--</button>--%>
-
-                        <%--</form>--%>
-                    <%--</div>--%>
-
-                    <%--<div class="tab-pane" id="panel-364800">--%>
-                        <%--<br />--%>
-                        <%--<form role="form">--%>
-                            <%--<div class="form-group">--%>
-                                <%--<label for="activityname">--%>
-                                    <%--活动名:--%>
-                                <%--</label>--%>
-                                <%--<input type="text" class="form-control" id="activityname">--%>
-                            <%--</div>--%>
-                            <%--<div class="form-group">--%>
-                                <%--<label for="begindate">--%>
-                                    <%--开始日期:--%>
-                                <%--</label>--%>
-                                <%--<input type="date" class="form-control" id="begindate">--%>
-                            <%--</div>--%>
-                            <%--<div class="form-group">--%>
-                                <%--<label for="enddate">--%>
-                                    <%--结束日期:--%>
-                                <%--</label>--%>
-                                <%--<input type="date" class="form-control" id="enddate">--%>
-                            <%--</div>--%>
-                            <%--<div class="form-group">--%>
-                                <%--<label for="activitydes">--%>
-                                    <%--活动描述:--%>
-                                <%--</label>--%>
-                                <%--<textarea cols="4" class="form-control" id="activitydes">输入商品描述</textarea>--%>
-                            <%--</div>--%>
-
-                            <%--<button type="submit" class="btn btn-primary">--%>
-                                <%--发布--%>
-                            <%--</button>--%>
-
-                        <%--</form>--%>
-                    <%--</div>--%>
-                <%--</div>--%>
-            <%--</div>--%>
-
-        <%--</div>--%>
-
-        <%--<div class="col-md-6">--%>
-            <%--<ul class="nav">--%>
-                <%--<li class="nav-item">--%>
-                    <%--<a class="nav-link active" href="#">已发布商品</a>--%>
-                <%--</li>--%>
-                <%--<li class="nav-item">--%>
-                    <%--<a class="nav-link" href="#">已发布活动</a>--%>
-                <%--</li>--%>
-            <%--</ul>--%>
-            <%--<ol>--%>
-                <%--<li class="list-item">--%>
-                    <%--商品1--%>
-                <%--</li>--%>
-                <%--<li class="list-item">--%>
-                    <%--商品2--%>
-                <%--</li>--%>
-                <%--<li class="list-item">--%>
-                    <%--商品3--%>
-                <%--</li>--%>
-                <%--<li class="list-item">--%>
-                    <%--Facilisis in pretium nisl aliquet--%>
-                <%--</li>--%>
-                <%--<li class="list-item">--%>
-                    <%--Nulla volutpat aliquam velit--%>
-                <%--</li>--%>
-                <%--<li class="list-item">--%>
-                    <%--Faucibus porta lacus fringilla vel--%>
-                <%--</li>--%>
-                <%--<li class="list-item">--%>
-                    <%--Aenean sit amet erat nunc--%>
-                <%--</li>--%>
-                <%--<li class="list-item">--%>
-                    <%--Eget porttitor lorem--%>
-                <%--</li>--%>
-            <%--</ol>--%>
-            <%--<nav>--%>
-                <%--<ul class="pagination">--%>
-                    <%--<li class="page-item">--%>
-                        <%--<a class="page-link" href="#">Previous</a>--%>
-                    <%--</li>--%>
-                    <%--<li class="page-item">--%>
-                        <%--<a class="page-link" href="#">1</a>--%>
-                    <%--</li>--%>
-                    <%--<li class="page-item">--%>
-                        <%--<a class="page-link" href="#">2</a>--%>
-                    <%--</li>--%>
-                    <%--<li class="page-item">--%>
-                        <%--<a class="page-link" href="#">3</a>--%>
-                    <%--</li>--%>
-                    <%--<li class="page-item">--%>
-                        <%--<a class="page-link" href="#">4</a>--%>
-                    <%--</li>--%>
-                    <%--<li class="page-item">--%>
-                        <%--<a class="page-link" href="#">5</a>--%>
-                    <%--</li>--%>
-                    <%--<li class="page-item">--%>
-                        <%--<a class="page-link" href="#">Next</a>--%>
-                    <%--</li>--%>
-                <%--</ul>--%>
-            <%--</nav>--%>
-        <%--</div>--%>
-    <%--</div>--%>
-<%--</div>--%>
-
-<%--<script src="js/jquery.min.js"></script>--%>
-<%--<script src="js/bootstrap.min.js"></script>--%>
-<%--<script src="js/scripts.js"></script>--%>
-<%--</body>--%>
-<%--</html>--%>

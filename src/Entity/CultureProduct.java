@@ -85,12 +85,13 @@ public class CultureProduct {
             CultureProduct ac=null;
             while (rs.next()) {
                 ac=new CultureProduct();
-                ac.setPrice(rs.getInt("product_price"));
+                ac.setPrice(rs.getDouble("product_price"));
                 ac.setDescription(rs.getString("product_info"));
                 ac.setName(rs.getString("product_name"));
                 ac.setTeamID(rs.getInt("product_team_id"));
                 ac.setPicture(rs.getBlob("product_img"));
                 ac.setProductID(rs.getInt("product_id"));
+                ac.setAmount(rs.getInt("product_amount"));
                 array.add(ac);
             }
         }

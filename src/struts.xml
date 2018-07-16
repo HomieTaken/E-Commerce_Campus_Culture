@@ -5,16 +5,35 @@
         "http://struts.apache.org/dtds/struts-2.5.dtd">
 
 <struts>
+    <!--constant name="struts.action.excludePattern" value="/messageServer"></constant-->
     <constant name="struts.devMode" value="true" />
     <constant name="struts.multipart.saveDir" value="/tmp"/>
-    <constant name="struts.action.excludePattern" value="/ws/.*,ws://.*"/>
+    <constant name="struts.action.excludePattern" value="/ws/.*,ws://.*,/messageServer"/>
     <include file="struts-loginandregister.xml"/>
     <package name="data" extends="struts-default">
         <action name="index">
             <result name="success">/index.jsp</result>
         </action>
 
-
+        <action name="register" class="Actions.RegisterAction" method="execute">
+            <result name="success">/login.jsp</result>
+            <result name="input">/register.jsp</result>
+            <result name="error">/register.jsp</result>
+        </action>
+        <!--action name="login" class="Actions.LoginAction" method="execute">
+            <result name="success">/index.jsp</result>
+            <result name="input">/teamPage.jsp</result>
+            <result name="error">/login.jsp</result>
+        </action-->
+        <action name="update_user_info" class ="Actions.UpdateUserInfo" method="execute">
+            <result name = "success">/index.jsp</result>
+        </action>
+        <action name="DisplayProduct" class="Actions.DisplayProduct" method="execute">
+            <result name="success" type = "redirect" >index.jsp</result>
+        </action>
+        <action name="logout" class="Actions.LogoutAction">
+            <result name="success">/index.jsp</result>
+        </action>
 
         <action name="navigationSwitch" class="Actions.NavigationSwitch" method="execute">
             <result name="success">/index.jsp</result>
@@ -29,25 +48,19 @@
             <result name="success">/teamPage.jsp</result>
             <result name="input">/teamPage.jsp</result>
         </action>
-
-        <action name="enterTeamActivity" class="Actions.UserViewActivity" method="execute">
-            <result name="success" type="redirect">/team.jsp</result>
+        <action name="search" class="Actions.SearchAction" method="execute">
+            <result name="success">/productList.jsp</result>
         </action>
-
-        <action name="enterTeam" class="Actions.UserViewTeam" method="execute">
-            <result name="success">/team.jsp</result>
+        <action name="search_plus" class="Actions.SearchPlusAction" method="execute">
+            <result name="success">/productList.jsp</result>
         </action>
-
-        <action name="enterProduct" class="Actions.ProductDetail"  method="execute">
-            <result name="success">/productDetail.jsp</result>
+        <action name="sort" class="Actions.SortAction" method="execute">
+            <result name="success">/productList.jsp</result>
         </action>
-
-        <action name="getPic" class="Actions.GetPicResource"  method="execute">
-        </action>
-
         <action name="enterChat" class="Actions.EnterChat">
             <result>chat.jsp</result>
         </action>
     </package>
+    <include file="conf/zheng.xml"></include>
     <include file="struts-schoolmanager.xml"/>
 </struts>

@@ -130,7 +130,15 @@ function checkRegister(){
         }
     }
 
-    var dh = '<%=Session["user_register_check"] %>';
-    if(dh==="true")
+    document.forms[0].submit();
+
+}
+
+function  checkSearch() {
+    var search = document.getElementById("search");
+    if (search.value.trim() === "") {
+        return false;
+    }
+    else
         document.forms[0].submit();
 }

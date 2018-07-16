@@ -107,4 +107,25 @@ public class Activity {
         }
         return exchange;
     }
+    public static  int[] getAllParticipant(int activity_id){
+        int[]result=null;
+        try {
+            ArrayList<Integer>arrayList=new ArrayList<Integer>();
+            String sql = "select * from activity_participant where activity_id=" + activity_id;
+            ResultSet rs = DBOperation.getRS(sql);
+            while(rs.next()){
+                int num=rs.getInt("activity_participant_id");
+                Integer p=new Integer(num);
+                arrayList.add(p);
+            }
+            result=new int[arrayList.size()];
+            for(int i=0;i<arrayList.size();i++){
+                result[i]=arrayList.get(i);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

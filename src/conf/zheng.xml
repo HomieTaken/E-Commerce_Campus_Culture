@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+    <!--constant name="struts.devMode" value="true" />
+    <constant name="struts.multipart.saveDir" value="/tmp"/-->
+    <package name="other" extends="struts-default">
+
+        <action name="enterTeamActivity" class="Actions.UserViewActivity" method="execute">
+            <result name="success" type="redirect">/team.jsp</result>
+        </action>
+
+        <action name="enterTeam" class="Actions.UserViewTeam" method="execute">
+            <result name="success">/team.jsp</result>
+        </action>
+
+<action name="enterProduct" class="Actions.ProductDetail"  method="execute">
+<result name="success">/productDetail.jsp</result>
+</action>
+<action name="addProduct" class="Actions.addProduct"  method="execute">
+<result name="log" type="redirect">enterProduct.action?productID=${category}&amp;havenotlog=true</result>
+    <result name="success" type="redirect">enterProduct.action?productID=${category}&amp;add=true</result>
+</action>
+        <action name="enterShopping" class="Actions.EnterCart">
+            <result name="success">/shoppingcart.jsp</result>
+            <result name="fail">/login.jsp</result>
+        </action>
+        <action name="changeProNum" class="Actions.addProduct" method="changeAmount">
+        </action>
+        <action name="deletePro" class="Actions.addProduct" method="deleteRecord">
+            <result name="success" type="redirect">enterShopping.action</result>
+        </action>
+        <action name="addAddress" class="Actions.AddAddress" method="execute">
+            <result name="log" type="redirect">enterProduct.action?productID=${productID}&amp;havenotlog=true</result>
+            <result name="success" type="redirect">enterProduct.action?productID=${productID}</result>
+        </action>
+<action name="getPic" class="Actions.GetPicResource"  method="execute">
+</action>
+        <action name="sendMessage" class="Actions.SendMessage" method="execute">
+            <result name="success" type="redirect">teamPage.jsp</result>
+        </action>
+        <action name="enterMessageBox" class="Actions.MessageBox" method="execute">
+            <result name="success">message.jsp</result>
+        </action>
+        <action name="readMessage" class="Actions.MessageBox" method="readMessage">
+        </action>
+        <action name="deleteMessage" class="Actions.MessageBox" method="deleteMessage">
+        </action>
+        <action name="getActivityResources" class="Actions.GetActivityResources">
+        </action>
+        <action name="enterTeamBox" class="Actions.MessageBox" method="execute">
+            <result name="success">teammessage.jsp</result>
+        </action>
+        <action name="payMoney" class="Actions.PayMoney" method="execute">
+        </action>
+        <action name="sendProductMessage" class="Actions.MessageBox" method="sendProductMessage">
+        </action>
+        <!--action name="TeamEnter" class="Actions.addTeamInfo" method="execute">
+            <result name="success">teamPage.jsp</result>
+        </action-->
+        </package>
+        </struts>

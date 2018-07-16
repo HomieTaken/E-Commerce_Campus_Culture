@@ -69,7 +69,7 @@
     </style>
 </head>
 <%
-    ArrayList<InterestGroup> groups=new ArrayList<>();
+    ArrayList<InterestGroup> groups=new ArrayList<InterestGroup>();
     try {
         ResultSet rs=DBOperation.getRS("select * from interest_group where group_id in (select group_id from group_members where user_id=\'"+session.getAttribute("user_id")+"\')");
         while (rs.next()){
@@ -87,7 +87,7 @@
 <body>
 <!-- title start -->
 <ul class="nav fixed-top" style="background-color: #6C6C6C; height:70px;">
-    <a class="navbar-brand col-sm-7" href="#" style="color:#FFFFFF;margin-top:12px;font-size:25px"> QinG MAng-兴趣小组 </a>
+    <a class="navbar-brand col-sm-7" href="index.jsp" style="color:#FFFFFF;margin-top:12px;font-size:25px"> QinG MAng-兴趣小组 </a>
 
     <li class="nav-item col-sm-3">
         <form class="form-inline" style="margin-top:18px;">

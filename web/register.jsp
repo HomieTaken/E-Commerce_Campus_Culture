@@ -12,7 +12,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <%
-    ArrayList<String> schools=new ArrayList<>();
+    ArrayList<String> schools=new ArrayList<String>();
     ResultSet rs=DBOperation.getRS("select school_name from school");
     while (rs.next()){
         schools.add(rs.getString(1));

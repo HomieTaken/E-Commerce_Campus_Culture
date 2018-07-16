@@ -27,8 +27,8 @@
 
 </head>
 <%
-    ArrayList<User> teams=new ArrayList<>();
-    ArrayList<TeamApplication> teamApplications=new ArrayList<>();
+    ArrayList<User> teams=new ArrayList<User>();
+    ArrayList<TeamApplication> teamApplications=new ArrayList<TeamApplication>();
     String userName= (String)session.getAttribute("user_name");
     String schoolName="";
     try {

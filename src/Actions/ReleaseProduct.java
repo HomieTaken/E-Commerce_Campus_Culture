@@ -75,11 +75,11 @@ public class ReleaseProduct extends ActionSupport {
         this.description = description;
     }
 
-    public java.io.File getImgFile() {
+    public File getImgFile() {
         return imgFile;
     }
 
-    public void setImgFile(java.io.File imgFile) {
+    public void setImgFile(File imgFile) {
         this.imgFile = imgFile;
     }
 
@@ -116,15 +116,15 @@ public class ReleaseProduct extends ActionSupport {
             ps = conn.prepareStatement(sql);
             ps.setBinaryStream(1, (InputStream) in, (int) in.available());
             if (ps.executeUpdate() > 0) {
-                DBConnect.close(conn, ps, null);
+            //    DBConnect.close(conn, ps, null);
                 return true;
             } else {
-                DBConnect.close(conn, ps, null);
+           //     DBConnect.close(conn, ps, null);
                 return false;
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            DBConnect.close(conn, ps, null);
+         //   DBConnect.close(conn, ps, null);
             return false;
         }
     }

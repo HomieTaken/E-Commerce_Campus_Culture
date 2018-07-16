@@ -13,6 +13,14 @@ public class EnterChat extends ActionSupport {
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
+//        try {
+//            byte[] b = groupName.getBytes("ISO-8859-1");
+//            groupName = new String(b, "utf-8");
+//            this.groupName = groupName;
+//        }
+//        catch (Exception e){
+//            e.printStackTrace();
+//        }
     }
 
     @Override

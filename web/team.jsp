@@ -1,7 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="Entity.CultureProduct" %>
 <%@ page import="Entity.Activity" %>
+<%@ page import="com.opensymphony.xwork2.ActionContext" %>
+<%@ page import="java.util.Map" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<!-------------------组号---------------------------->
+
+<!------------------------------------------------->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -17,15 +22,17 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 	<link href="css/bootstrap.css" rel="stylesheet">
-
+	  <script src="js/server-01.js"></script>
   </head>
   <body>
-
+  <%if(request.getSession().getAttribute("user_id")!=null){%>
+  <script>createConn();</script>
+  <%}%>
     <div class="container-fluid">
 
 	<br>
 		 <ul class="nav fixed-top" style="background-color: #6C6C6C; height:70px;">
-			<a class="navbar-brand col-sm-4" href="#" style="color:#FFFFFF;margin-top:12px;font-size:25px"> QinG MAng-店铺 </a>
+			<a class="navbar-brand col-sm-3" href="index.jsp" style="color:#FFFFFF;margin-top:12px;font-size:25px"> QinG MAng-店铺 </a>
 			
 			<li class="nav-item col-sm-1" >
 			  <a class="nav-link" href="#showact" style="color:#FFFFFF;font-size:18px;margin-top:12px;">活动</a>
@@ -34,13 +41,39 @@
 			  <a class="nav-link" href="#showpro" style="color:#FFFFFF;font-size:18px;margin-top:12px;">商品</a>
 			</li>
 			<li class="nav-item col-sm-3">
-					  <form class="form-inline" style="margin-top:18px;">
-					  	<input class="form-control mr-sm-2" type="text" style="width: 200px;" placeholder="搜本店"> 
-					  	<button class="btn btn-default my-2 my-sm-0" type="submit" >
+					  <form action="search_plus.action"  class="form-inline" style="margin-top:18px;">
+					  	<input name = "entry" class="form-control mr-sm-2" type="text" style="width: 200px;" placeholder="搜本店">
+					  	<button class="btn btn-default my-2 my-sm-0" type="submit" onclick="return checkSearch()" >
 					  		<span class="glyphicon glyphicon-search"></span>
 					  	</button>
 					  </form>
 			</li>
+
+			 <!------------------------------------------------------->
+			 <!---消息显示按钮-->
+			 <s:if test="#session.message_count!=null">
+				 <div class="col-md-1" style="margin-left:0px;margin-top: 18px;">
+					 <a href="enterMessageBox.action"><button type="button" class="btn btn-info">
+						 <span class="glyphicon glyphicon-envelope"></span>
+					 </button></a>
+				 </div></a>
+
+				 <div id="messageCircle" class="badge-bg" style="margin-left:-70px;margin-top:10px;z-index:2; width:20px;
+    height:20px;
+    background-color:#F00;
+    border-radius:25px;display:none;">
+                            <span id="message_count" class="badge-span" style="    height:20px;
+    line-height:20px;
+    display:block;
+    color:#FFF;
+    text-align:center;"><s:if test="#session.message_count>0">
+								<s:property value="#session.message_count"/></s:if></span>
+				 </div>
+				 <s:if test="#session.message_count>0">
+					 <script>document.getElementById("messageCircle").style.display=""</script></s:if>
+			 </s:if>
+			 <!---------------------------------------------->
+
 			<li class="nav-item ">
                 <s:if test="#session.user_name==null">
                     <div style="margin-top:18px;margin-left:40px">
@@ -169,7 +202,7 @@
 				<br>
 				<br>
 				<%}%>
-			  <HR style= " FILTER: progid:DXImageTransform.Microsoft.Glow ( color= #987cb9 ,strength = 10) " width= "80%" color= #987 cb9 SIZE =1>
+			  <%--<HR style= " FILTER: progid:DXImageTransform.Microsoft.Glow ( color= #6996b9 ,strength = 10) " width= "80%" color= #987 cb9 SIZE =1>--%>
 			<!--div class="media">
 				<img class="mr-3" alt="Bootstrap Media Preview" src="https://www.layoutit.com/img/sports-q-c-64-64-8.jpg">
 				<div class="media-body">

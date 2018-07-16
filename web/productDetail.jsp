@@ -26,15 +26,28 @@
 
 </head>
 <body>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/scripts.js"></script>
+<script src="js/server-01.js"></script>
 <%String path = request.getContextPath();
     String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";%>
 
 <%CultureProduct product= (CultureProduct) request.getAttribute("productDetail");%>
+<%String str=(String)request.getParameter("havenotlog");
+    if(str!=null){%>
+<script type="text/javascript">
+    window.open("login.jsp");
+</script>
+<%}%>
+<%if(request.getSession().getAttribute("user_id")!=null){%>
+<script>createConn();</script>
+<%}%>
 <div class="container-fluid">
 
     <!--导航栏，也是页头-->
     <ul class="nav fixed-top" style="background-color: #6C6C6C; height:70px;">
-        <a class="navbar-brand col-sm-7" href="#" style="color:#FFFFFF;margin-top:12px;font-size:25px"> QinG MAng-商品 </a>
+        <a class="navbar-brand col-sm-6" href="enterTeam?teamID=<%=product.getTeamID()%>" style="color:#FFFFFF;margin-top:12px;font-size:25px"> QinG MAng-商品 </a>
 
 
         <li class="nav-item col-sm-3">
@@ -45,6 +58,30 @@
                 </button>
             </form>
         </li>
+        <!------------------------------------------------------->
+        <!---消息显示按钮-->
+        <s:if test="#session.message_count!=null">
+       <div class="col-md-1" style="margin-left:0px;margin-top: 18px;">
+           <a href="enterMessageBox.action"><button type="button" class="btn btn-info">
+                    <span class="glyphicon glyphicon-envelope"></span>
+           </button></a>
+        </div></a>
+
+            <div id="messageCircle" class="badge-bg" style="margin-left:-70px;margin-top:10px;z-index:2; width:20px;
+    height:20px;
+    background-color:#F00;
+    border-radius:25px;display:none;">
+                            <span id="message_count" class="badge-span" style="    height:20px;
+    line-height:20px;
+    display:block;
+    color:#FFF;
+    text-align:center;"><s:if test="#session.message_count>0">
+                                <s:property value="#session.message_count"/></s:if></span>
+            </div>
+        <s:if test="#session.message_count>0">
+            <script>document.getElementById("messageCircle").style.display=""</script></s:if>
+        </s:if>
+        <!---------------------------------------------->
         <li class="nav-item ">
             <s:if test="#session.user_name==null">
                 <div style="margin-top:18px;margin-left:40px">
@@ -59,7 +96,7 @@
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item disabled" href="#">Action</a>
-                        <a class="dropdown-item" href="/shoppingcart.jsp">购物车</a>
+                        <a class="dropdown-item" href="/enterShopping.action">购物车</a>
                         <a class="dropdown-item" href="/logout">退出登录</a>
                     </div>
                 </div>
@@ -74,7 +111,6 @@
                 <!--product picture-->
                 <br />
                 <img height="200px" class="img-thumbnail img-fluid" alt="Carousel Bootstrap Second" src="<%=basePath%>/getPic.action?productID=<%=product.getProductID()%>" />
-                <!--img src="http://static.runoob.com/images/mix/paris.jpg" class="img-thumbnail img-fluid"-->
             </div>
             <br />
             <!--product description-->
@@ -86,8 +122,6 @@
                     <br />
                     <dd>
                         <%=product.getDescription()%>
-                        <!--这里有一条路，叫樱花大道。三月赏樱，唯有武大。樱树袅娜生长，遍天都是纯白的、淡粉的花朵。抬头只见花不见天，仿佛进入一个晶莹透亮的世界。
-                    这里有一个恋爱圣地，叫情人坡。一对对恋人坐在参天大树下的小石凳子上或读书、或聊天......-->
                     </dd>
                 </dl>
             </div>
@@ -117,24 +151,33 @@
                         </div>
                     </div>
 
-                    <form class="form" role="form">
+                    <form class="form" role="form" action="addProduct">
                         <!--配送地址-->
+                        <input type="hidden" name ="category" value="<%=product.getProductID()%>"/>
                         <br />
                         <div class="form-group">
                             <label class="control-label" for="shipaddress">选择配送地点</label>
+                            <a href="#modal-addaddress" data-toggle="modal" role="button" class="btn" style="height:37px;margin-left:0px"><span class="glyphicon glyphicon-plus-sign"></span></a>
                             <select name="address" class="form-control" id="shipaddress">
+                                <%String[] addressed=(String[])request.getAttribute("addressDetail");
+                                    if(addressed==null){%>
                                 <option>湖北省武汉市信息学部</option>
                                 <option>美国洛杉矶</option>
+                                <%}
+                                else{
+                                    for(int i=0;i<addressed.length;i++){%>
+                                <option><%=addressed[i]%></option>>
+                                <%}
+                                }%>
                             </select>
                         </div>
-
                         <!--配送数量-->
                         <br />
                         <div class="form-group">
                             <label for="pronum" class="control-label">
-                                选择数量：(现存99件)
+                                选择数量：(现存<%=product.getAmount()%>件)
                             </label>
-                            <input name="number" type="number" class="form-control" id="pronum">
+                            <input name="number" type="number" min="1" value="1" class="form-control" id="pronum">
                         </div>
                         <br />
 
@@ -142,9 +185,92 @@
                             <button type="submit" class="btn btn-primary">
                                 <span class="glyphicon glyphicon-shopping-cart"></span> 加入购物车
                             </button>
+                            <%str=(String)request.getParameter("havenotlog");
+                                if(str!=null){%>
+                            请先登录
+                            <%}%>
+                            <%str=(String)request.getParameter("add");
+                            if(str!=null){%>
+                            已成功加入购物车
+                            <%}%>
                         </div>
 
                     </form>
+
+
+
+
+
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="modal fade" id="modal-addaddress" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="myModalLabel">
+                                                增加收货地址
+                                            </h5>
+                                            <button type="button" class="close" data-dismiss="modal">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+                                        <!--增加收货地址表单主体-->
+                                        <div class="modal-body">
+                                            <form role="form" class="form-horizontal" action="addAddress">
+                                                <input type="hidden" name="productID" value=<%=request.getParameter("productID")%> />
+                                                <br />
+                                                <div class="input-group">
+                                                    <span class="col-md-3" style="margin-left:10px">所在地区:</span>
+                                                    <input name="province" style="left:-15px;top:-6px;border-top-left-radius: 5px; border-top-right-radius: 5px;border-bottom-left-radius:5px; border-bottom-right-radius:5px; " type="text" class="form-control col-md-4" placeholder="省份">
+                                                    <input name="city" style="left:-5px;top:-6px; border-top-left-radius: 5px; border-top-right-radius: 5px;border-bottom-left-radius:5px; border-bottom-right-radius:5px; " type="text" class="form-control col-md-4" placeholder="城市">
+                                                </div>
+                                                <br />
+                                                <div class="input-group">
+                                                    <span class="col-md-3" style="margin-left:10px">详细地址:</span>
+                                                    <textarea name="addressDetail" cols="4" class="form-control" style="left:-15px; border-top-left-radius: 5px; border-top-right-radius: 5px;border-bottom-left-radius:5px; border-bottom-right-radius:5px;" placeholder="建议您如实填写详细收货地址，例如街道名称，门牌号码，楼层和房间号等信息"></textarea>
+                                                </div>
+                                                <br/>
+                                                <div class="input-group">
+                                                    <span class="col-md-3" style="margin-left:-5px">收货人姓名:</span>
+                                                    <input name="userName" style="left:0px;top:-6px;width:250px;border-top-left-radius: 5px; border-top-right-radius: 5px;border-bottom-left-radius:5px; border-bottom-right-radius:5px; " type="text" class="form-control col-md-8" placeholder="长度不超过10个字">
+                                                </div>
+                                                <br />
+                                                <div class="input-group">
+                                                    <span class="col-md-3" style="margin-left:10px">手机号码:</span>
+                                                    <input name="phoneNumber" style="left:-15px;top:-6px;width:250px;border-top-left-radius: 5px; border-top-right-radius: 5px;border-bottom-left-radius:5px; border-bottom-right-radius:5px; " type="phone" class="form-control col-md-8" placeholder="中国大陆+86">
+                                                </div>
+                                                <br />
+                                                <div class="checkbox checkbox-primary col-md-8" style=" margin-top:-20px;left:21%">
+                                                    <input id="checkbox4" class="styled" type="checkbox">
+                                                    <label for="checkbox4" style="font-size:15px">
+                                                        设为默认收货地址
+                                                    </label>
+                                                </div>
+                                                <br />
+                                                <div class="form-group" style="margin-left:34%">
+                                                    <div class="col-sm-offset-2 col-md-6">
+                                                        <button type="submit" class="btn btn-warning btn-block">保存</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+
                     <br />
                 </div>
 
@@ -153,150 +279,14 @@
     </div>
 </div>
 
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/scripts.js"></script>
+
+
+
+
+
+
+
+
+
 </body>
 </html>
-<%--<html lang="en">--%>
-<%--<head>--%>
-    <%--<meta charset="utf-8">--%>
-    <%--<meta http-equiv="X-UA-Compatible" content="IE=edge">--%>
-    <%--<meta name="viewport" content="width=device-width, initial-scale=1">--%>
-
-    <%--<title>Bootstrap 4, from LayoutIt!</title>--%>
-
-    <%--<meta name="description" content="Source code generated using layoutit.com">--%>
-    <%--<meta name="author" content="LayoutIt!">--%>
-
-    <%--<link href="css/bootstrap.min.css" rel="stylesheet">--%>
-    <%--<link href="css/bootstrap.css" rel="stylesheet">--%>
-    <%--&lt;%&ndash;<link href="css/style.css" rel="stylesheet">&ndash;%&gt;--%>
-
-<%--</head>--%>
-<%--<body>--%>
-
-<%--<div class="container-fluid">--%>
-
-    <%--<!--青芒logo-->--%>
-    <%--<br />--%>
-    <%--<div class="row">--%>
-        <%--<div class="col-md-12">--%>
-            <%--<h3>--%>
-                <%--<img alt="Bootstrap Image Preview" height="50px" width="100px" src="img/qingmang.png">--%>
-            <%--</h3>--%>
-        <%--</div>--%>
-    <%--</div>--%>
-    <%--<br />--%>
-
-    <%--<!--商品图片展示及描述-->--%>
-    <%--<div class="row">--%>
-        <%--<div class="col-md-6">--%>
-            <%--<div class="row">--%>
-                <%--<!--product picture-->--%>
-                <%--<div class="col-md-10">--%>
-                    <%--<div class="carousel slide" id="carousel-335963" >--%>
-                        <%--<ol class="carousel-indicators">--%>
-                            <%--<li data-slide-to="0" data-target="#carousel-335963">--%>
-                            <%--</li>--%>
-                            <%--<li data-slide-to="1" data-target="#carousel-335963" class="active">--%>
-                            <%--</li>--%>
-                            <%--<li data-slide-to="2" data-target="#carousel-335963">--%>
-                            <%--</li>--%>
-                        <%--</ol>--%>
-                        <%--<div class="carousel-inner" >--%>
-                            <%--<div class="carousel-item">--%>
-                                <%--<img height="200px"  class="d-block w-100" alt="Carousel Bootstrap First" src="img/WHUpro1.jpg">--%>
-                            <%--</div>--%>
-                            <%--<div class="carousel-item active">--%>
-                                <%--<img height="200px"  class="d-block w-100" alt="Carousel Bootstrap Second" src="img/WHUpro2.jpg">--%>
-                            <%--</div>--%>
-                            <%--<div class="carousel-item">--%>
-                                <%--<img height="200px"  class="d-block w-100" alt="Carousel Bootstrap Third" src="img/WHUpro3.jpg">--%>
-                            <%--</div>--%>
-                        <%--</div> <a class="carousel-control-prev" href="#carousel-335963" data-slide="prev"><span class="carousel-control-prev-icon"></span> <span class="sr-only">Previous</span></a> <a class="carousel-control-next" href="#carousel-335963" data-slide="next"><span class="carousel-control-next-icon"></span> <span class="sr-only">Next</span></a>--%>
-                    <%--</div>--%>
-                <%--</div>--%>
-
-                <%--<div class="col-md-2">--%>
-                    <%--<button type="button" class="btn btn-md btn-outline-info">--%>
-                        <%--<span class="glyphicon glyphicon-search"></span>  收藏--%>
-                    <%--</button>--%>
-                <%--</div>--%>
-            <%--</div>--%>
-
-            <%--<br />--%>
-            <%--<!--product description-->--%>
-            <%--<dl>--%>
-                <%--<dt>--%>
-                    <%--商品描述--%>
-                <%--</dt>--%>
-                <%--<dd>--%>
-					<%--<pre>--%>
-<%--这里有一所大学--%>
-<%--春天--%>
-<%--她樱花漫野--%>
-<%--夏天--%>
-<%--这里树荫蔽日--%>
-<%--秋天--%>
-<%--她色彩斑斓、金桂飘香--%>
-<%--冬天--%>
-<%--这里的腊梅傲立雪中--%>
-<%--这里有一条路，叫樱花大道。三月赏樱，唯有武大。樱树袅娜生长，遍天都是纯白的、淡粉的花朵。抬头只见花不见天，仿佛进入一个晶莹透亮的世界。--%>
-<%--这里有一个恋爱圣地，叫情人坡。一对对恋人坐在参天大树下的小石凳子上或读书、或聊天......--%>
-					<%--</pre>--%>
-                <%--</dd>--%>
-            <%--</dl>--%>
-        <%--</div>--%>
-
-        <%--<div class="col-md-6">--%>
-            <%--<h3 class="text-info text-center">--%>
-                <%--印象武大纪念明信片--%>
-            <%--</h3>--%>
-            <%--<br />--%>
-            <%--<h4 class="text-center">--%>
-                <%--<em>价格：￥10</em>--%>
-            <%--</h4>--%>
-
-            <%--<form class="form" role="form">--%>
-                <%--<!--配送地址-->--%>
-                <%--<br />--%>
-                <%--<div class="form-group">--%>
-                    <%--<label class="control-label" for="shipaddress">选择配送地点</label>--%>
-                    <%--<select class="form-control" id="shipaddress">--%>
-                        <%--<option>湖北省武汉市信息学部</option>--%>
-                        <%--<option>美国洛杉矶</option>--%>
-                    <%--</select>--%>
-                <%--</div>--%>
-
-                <%--<!--配送数量-->--%>
-                <%--<br />--%>
-                <%--<div class="form-group">--%>
-                    <%--<label for="pronum" class="control-label">--%>
-                        <%--选择数量：(现存99件)--%>
-                    <%--</label>--%>
-                    <%--<input type="number" class="form-control" id="pronum">--%>
-                <%--</div>--%>
-                <%--<br />--%>
-
-                <%--<div class="form-group">--%>
-                    <%--&lt;%&ndash;<s:set var="#session.product_id>&ndash;%&gt;--%>
-                    <%--<a href="shoppingcart.jsp?product_id=7">--%>
-                    <%--<button class="btn btn-primary">--%>
-                        <%--加入购物车--%>
-                    <%--</button>--%>
-                    <%--</a>--%>
-                <%--</div>--%>
-
-            <%--</form>--%>
-
-
-        <%--</div>--%>
-    <%--</div>--%>
-<%--</div>--%>
-
-<%--<script src="js/jquery.min.js"></script>--%>
-<%--<script src="js/bootstrap.min.js"></script>--%>
-<%--<script src="js/scripts.js"></script>--%>
-<%--</body>--%>
-<%--</html>--%>

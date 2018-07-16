@@ -9,13 +9,21 @@ public class DBConnect {
     //加载驱动，连接数据库
     public static Connection getConnection() {
         try{
-            String driver = "com.mysql.jdbc.Driver";
-            Class.forName(driver);
+            if(conn!=null)
+                return conn;
+            else {
+                String driver = "com.mysql.jdbc.Driver";
+                Class.forName(driver);
 
-            String user = "zhangweidb%zhangwei";
-            String password = "Zhangwei123";
-            String url = "jdbc:mysql://zhangweidb.mysqldb.chinacloudapi.cn:3306/db";
-            conn = DriverManager.getConnection(url, user, password);
+//                String user = "root";
+//                String password ="123456";
+//                String url = "jdbc:mysql://localhost:3306/db?useUnicode=true&characterEncoding=UTF-8";
+                String user = "zhangweidb%zhangwei";
+                 String password = "Zhangwei123";
+                 String url = "jdbc:mysql://zhangweidb.mysqldb.chinacloudapi.cn:3306/db?autoReconnect=true";
+
+                conn = DriverManager.getConnection(url, user, password);
+            }
 
         }catch(Exception e){
             e.printStackTrace();
@@ -23,19 +31,16 @@ public class DBConnect {
         return conn;
     }
 
-    public static void close(Connection con,Statement st,ResultSet rs){
-        if(rs!=null)
-            try {
-                rs.close();
-            } catch (SQLException e) {   e.printStackTrace();       }
-        if(st!=null)
-            try {
-                st.close();
-            } catch (SQLException e) {  e.printStackTrace();        }
-        if(con!=null)
-            try {
-                con.close();
-            } catch (SQLException e) {   e.printStackTrace();       }
+    public static void close(){
+     try{
+     if(conn!=null) {
+         conn.close();
+         conn = null;
+     }
+    }
+    catch (Exception e){
+         e.printStackTrace();
+     }
     }
 }
 

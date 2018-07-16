@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.*;
 
 import DataBase.*;
+import Operations.MessageOperate;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ActionContext;
 
@@ -89,6 +90,11 @@ public class LoginAction extends ActionSupport {
         session.put("user_name", this.getUserName());
         session.put("user_id", userID);
         session.put("user_type", userType);
+       //--------------------------------------------------
+        //加入用户新消息
+        int count=MessageOperate.getNewMessageNum(userID);
+        session.put("message_count",count);
+        //------------------------------------------------
         //ActionContext.getContext().getSession().put("login", user.getUserName());
         DBOperation.close();
         System.out.println("登陆成功");
