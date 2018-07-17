@@ -1,4 +1,4 @@
-package Actions;
+package Operations;
 import Entity.CultureProduct;
 
 public class MultiSort {

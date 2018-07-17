@@ -9,7 +9,7 @@ public class DBConnect {
     //加载驱动，连接数据库
     public static Connection getConnection() {
         try{
-            if(conn!=null)
+            if(conn!=null&&conn.isValid(5000))
                 return conn;
             else {
                 String driver = "com.mysql.jdbc.Driver";

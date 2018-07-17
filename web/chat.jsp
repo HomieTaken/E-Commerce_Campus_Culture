@@ -60,25 +60,33 @@
             font-size: 14px;
         }
 
-        .grayimg {
-            -webkit-filter: grayscale(1); /* Webkit */
-            filter: gray; /* IE6-9 */
-            filter: grayscale(1); /* W3C */
-        }
+        /*.grayimg {*/
+            /*-webkit-filter: grayscale(1); !* Webkit *!*/
+            /*filter: gray; !* IE6-9 *!*/
+            /*filter: grayscale(1); !* W3C *!*/
+        /*}*/
 
     </style>
 </head>
 <%
     ArrayList<InterestGroup> groups=new ArrayList<InterestGroup>();
+    ArrayList<InterestGroup> ownerGroups=new ArrayList<InterestGroup>();
     try {
-        ResultSet rs=DBOperation.getRS("select * from interest_group where group_id in (select group_id from group_members where user_id=\'"+session.getAttribute("user_id")+"\')");
-        while (rs.next()){
-            InterestGroup group=new InterestGroup();
+//        String sql="select * from interest_group where group_id in (select group_id from group_members where user_id=\'"+session.getAttribute("user_id")+"\')";
+        String sql="select * from interest_group";
+        ResultSet rs=DBOperation.getRS(sql);
+
+        int user_id=(int) session.getAttribute("user_id");
+        while (rs.next()) {
+            InterestGroup group = new InterestGroup();
             group.setOwnerID(rs.getInt("group_owner_id"));
             group.setGroupID(rs.getInt("group_id"));
             group.setGroupName(rs.getString("group_name"));
             group.setGroupInfo(rs.getString("group_info"));
-            groups.add(group);
+            if (user_id==rs.getInt("group_owner_id"))
+                ownerGroups.add(group);
+            else
+                groups.add(group);
         }
     } catch (SQLException e) {
         e.printStackTrace();
@@ -117,6 +125,18 @@
     <div class="col-md-3">
         <div class="list-group" style="margin-left: 20px;margin-top: 20px;">
             <a href="javascript:return false;" class="list-group-item list-group-item-action active" style="">兴趣小组</a>
+            <a href="javascript:void(0)" class="list-group-item list-group-item-action">我创建的</a>
+            <div id="ownergroups">
+                <%
+                    for (InterestGroup group : ownerGroups) {
+                %>
+                <a id="group_id_<%=group.getGroupName()%>" role="button" href="enterChat.action?groupName=<%=group.getGroupName()%>" class="list-group-item list-group-item-action"><%=group.getGroupName()%></a >
+                <%
+                    }
+                %>
+            </div>
+            <a href="javascript:void(0)" class="list-group-item list-group-item-action">我加入的</a>
+            <div id="othergroups">
             <%
                 for (InterestGroup group : groups) {
             %>
@@ -124,6 +144,7 @@
             <%
                 }
             %>
+            </div>
             <%--<a href="#" class="list-group-item list-group-item-action">小组1</a>--%>
             <%--<a href="#" class="list-group-item list-group-item-action">小组2</a>--%>
             <%--<a href="#" class="list-group-item list-group-item-action">小组3</a>--%>
