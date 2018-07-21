@@ -15,6 +15,7 @@
 <head>
     <meta charset="utf-8">
     <title>enterMessageBox</title>
+    <link rel="alternate icon" href="img/qm.ico">
 </head>
 <body>
 <%String path = request.getContextPath();

@@ -16,11 +16,20 @@ public class UserViewTeam implements Action {
     }
     @Override
     public String execute() {
-        ActionContext.getContext().put("ActsBriefView",ViewTeam.getActBriefView(teamID));//加入活动预览
-        ActionContext.getContext().put("ProsBriefView",ViewTeam.getProBriefView(teamID));//加入商品预览
-        ActionContext actionContext = ActionContext.getContext();
-        Map<String, Object> session = actionContext.getSession();
+        Map<String, Object> session = ActionContext.getContext().getSession();
         session.put("teamID",teamID);
+        Object user_id=session.get("user_id");
+        if(user_id!=null) {
+           // ActionContext.getContext().put("ActsBriefView", ViewTeam.getActBriefView(teamID, user_id));//加入活动预览
+            ActionContext.getContext().put("ActsBriefView", ViewTeam.getAllActivityies(teamID, user_id));//加入活动预览
+        }
+        else{
+           // ActionContext.getContext().put("ActsBriefView", ViewTeam.getActBriefView(teamID));//加入活动预览
+            ActionContext.getContext().put("ActsBriefView", ViewTeam.getAllActivityies(teamID));//加入活动预览
+        }
+       // ActionContext.getContext().put("ProsBriefView",ViewTeam.getProBriefView(teamID));//加入商品预览
+        ActionContext.getContext().put("ProsBriefView",ViewTeam.getAllProducts(teamID));//加入商品预览
+        ActionContext.getContext().put("report_team_id", new Integer(teamID));//加入活动预览
         return SUCCESS;
     }
 }

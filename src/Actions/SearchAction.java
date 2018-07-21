@@ -50,7 +50,7 @@ public class SearchAction extends ActionSupport {
             Map<String, Object> session = actionContext.getSession();
             session.put("search_products",products);
             session.put("search_state",state);
-                return "success";
+            return "success";
     }
 
 }

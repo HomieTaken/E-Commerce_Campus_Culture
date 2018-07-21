@@ -11,12 +11,13 @@
 <head>
     <title>青芒-登录</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="alternate icon" href="img/qm.ico">
     <!-- 引入 Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="css/style.css" rel="stylesheet">
     <link href="css/bootstrap.css" rel="stylesheet">
 </head>
-<body  background="img/loginbg5.jpg">
+<body  background="img/bgtest5.jpg">
 <div class="container-fluid">
 
     <!--青芒logo-->
@@ -38,6 +39,7 @@
     <div class="col-sm-6 " style="margin-left:35%">
         <s:fielderror name="userName"/>
     </div>
+
     <form action="login.action" method="post" role="form">
         <div class="row">
             <div class="input-group col-sm-6 " style="margin-left:25%">
@@ -45,7 +47,7 @@
 			        <span class="glyphicon glyphicon-user">
 			        </span>
 			    </span>
-                <input name="userName" style="border-top-right-radius: 20px; border-bottom-right-radius:20px;" type="text" class="form-control" id="username" placeholder="请输入名字" >
+                <input name="userName" style="border-top-right-radius: 20px; border-bottom-right-radius:20px;" type="text" class="form-control" id="username" placeholder="请输入名字">
             </div>
             <div class="col-sm-2">
                 <em id="name"></em>

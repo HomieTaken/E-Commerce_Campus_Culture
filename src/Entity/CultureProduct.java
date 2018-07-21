@@ -91,7 +91,7 @@ public class CultureProduct {
                 ac.setTeamID(rs.getInt("product_team_id"));
                 ac.setPicture(rs.getBlob("product_img"));
                 ac.setProductID(rs.getInt("product_id"));
-                ac.setAmount(rs.getInt("product_amount"));
+                ac.setAmount(rs.getInt("product_sales"));
                 array.add(ac);
             }
         }

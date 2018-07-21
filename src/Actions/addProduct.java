@@ -10,6 +10,7 @@ import org.apache.struts2.ServletActionContext;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.text.View;
 import java.sql.ResultSet;
 
 public class addProduct implements Action {
@@ -40,7 +41,10 @@ public class addProduct implements Action {
             return "log";
         }
         userID = (int)actionContext.getSession().get("user_id");
+        if(ViewProduct.viewGivenPro(Integer.parseInt(category)).getAmount()>num)
          ViewProduct.addPro(category,userID,num);
+        else
+            return "notenough";
       /*  ResultSet rs=MessageOperate.addPurchaseMessage(userID,Integer.parseInt(category),num);
         try {
             if (rs.next()) {

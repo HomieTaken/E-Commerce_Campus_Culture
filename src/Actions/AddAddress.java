@@ -4,15 +4,26 @@ import Operations.ViewProduct;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 
+import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 
 public class AddAddress implements Action {
     private int productID;
-    private String province;
-private String city;
-private String addressDetail;
-private String userName;
-private String phoneNumber;
+    private String city;
+    private String addressDetail;
+    private String receiverName;
+    private String phoneNumber;
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) throws UnsupportedEncodingException {
+//        byte[] b;
+//        b=city.getBytes("ISO-8859-1");
+//        city = new String(b, "utf-8");
+        this.city = city;
+    }
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -22,12 +33,12 @@ private String phoneNumber;
         this.phoneNumber = phoneNumber;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getReceiverName() {
+        return receiverName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setReceiverName(String receiverName) {
+        this.receiverName = receiverName;
     }
 
     public String getAddressDetail() {
@@ -36,22 +47,6 @@ private String phoneNumber;
 
     public void setAddressDetail(String addressDetail) {
         this.addressDetail = addressDetail;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getProvince() {
-        return province;
-    }
-
-    public void setProvince(String province) {
-        this.province = province;
     }
 
     public void setProductID(int productID) {
@@ -69,18 +64,14 @@ private String phoneNumber;
             return "log";
         }
        int userID = (int)actionContext.getSession().get("user_id");
-        try {
-            byte[] b = province.getBytes("ISO-8859-1");
-            province = new String(b, "utf-8");
-             b = city.getBytes("ISO-8859-1");
-            city = new String(b, "utf-8");
-             b = addressDetail.getBytes("ISO-8859-1");
-            addressDetail = new String(b, "utf-8");
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        ViewProduct.addAddress(userID,province+city+addressDetail);
+
+        StringBuilder theAddress= new StringBuilder();
+
+        String[] address=city.split("/");
+        for (String addres : address) theAddress.append(addres);
+
+        ViewProduct.addAddress(userID, (theAddress + addressDetail).toString(),receiverName,phoneNumber);
+
         return SUCCESS;
     }
 }

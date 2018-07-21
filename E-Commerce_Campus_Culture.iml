@@ -17,6 +17,7 @@
             <file>jar://D:/struts-2.5.8/lib/struts2-core-2.5.8.jar!/struts-default.xml</file>
             <file>file://$MODULE_DIR$/src/struts-schoolmanager.xml</file>
             <file>file://$MODULE_DIR$/src/struts-loginandregister.xml</file>
+            <file>file://$MODULE_DIR$/src/conf/zheng.xml</file>
           </fileset>
           <propertiesKeys disabled="false" />
         </configuration>
@@ -35,5 +36,6 @@
     <orderEntry type="library" name="mysql-connector-java-5.1.45-bin" level="project" />
     <orderEntry type="library" name="json-lib-2.4-jdk15" level="project" />
     <orderEntry type="library" name="javaee-api-7.0" level="project" />
+    <orderEntry type="library" name="json" level="project" />
   </component>
 </module>

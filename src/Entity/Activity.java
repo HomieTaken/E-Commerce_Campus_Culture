@@ -14,6 +14,15 @@ public class Activity {
     private Date endDate;
     private String description;
     private String address;
+    private boolean haveEntered=false;
+
+    public void setHaveEntered(boolean haveEntered) {
+        this.haveEntered = haveEntered;
+    }
+
+    public boolean isHaveEntered() {
+        return haveEntered;
+    }
 
     public String getActivityName() {
         return activityName;
@@ -69,6 +78,10 @@ public class Activity {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public static Activity getActivity(int activityID){
+       return getActivity("select * from activity where activity_id="+activityID)[0];
     }
 
     public static Activity[] getActivity(String sql){

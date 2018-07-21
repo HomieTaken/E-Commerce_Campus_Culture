@@ -23,13 +23,14 @@
 <action name="addProduct" class="Actions.addProduct"  method="execute">
 <result name="log" type="redirect">enterProduct.action?productID=${category}&amp;havenotlog=true</result>
     <result name="success" type="redirect">enterProduct.action?productID=${category}&amp;add=true</result>
+    <result name="notenough" type="redirect">enterProduct.action?productID=${category}&amp;add=false</result>
 </action>
         <action name="enterShopping" class="Actions.EnterCart">
             <result name="success">/shoppingcart.jsp</result>
             <result name="fail">/login.jsp</result>
         </action>
-        <action name="changeProNum" class="Actions.addProduct" method="changeAmount">
-        </action>
+        <!--action name="changeProNum" class="Actions.addProduct" method="changeAmount">
+        </action-->
         <action name="deletePro" class="Actions.addProduct" method="deleteRecord">
             <result name="success" type="redirect">enterShopping.action</result>
         </action>
@@ -40,10 +41,15 @@
 <action name="getPic" class="Actions.GetPicResource"  method="execute">
 </action>
         <action name="sendMessage" class="Actions.SendMessage" method="execute">
-            <result name="success" type="redirect">teamPage.jsp</result>
+        <result name="success" type="redirect">teamPage.jsp</result>
+    </action>
+        <action name="sendComment" class="Actions.SendMessage" method="comment">
+            <result name="success" type="redirect">enterMessageBox.action?page=0</result>
+            <result name="fail" type="redirect">login.jsp</result>
         </action>
         <action name="enterMessageBox" class="Actions.MessageBox" method="execute">
             <result name="success">message.jsp</result>
+            <result name="fail">login.jsp</result>
         </action>
         <action name="readMessage" class="Actions.MessageBox" method="readMessage">
         </action>
@@ -54,12 +60,26 @@
         <action name="enterTeamBox" class="Actions.MessageBox" method="execute">
             <result name="success">teammessage.jsp</result>
         </action>
-        <action name="payMoney" class="Actions.PayMoney" method="execute">
-        </action>
+        <!--action name="payMoney" class="Actions.PayMoney" method="execute">
+        </action-->
         <action name="sendProductMessage" class="Actions.MessageBox" method="sendProductMessage">
         </action>
-        <!--action name="TeamEnter" class="Actions.addTeamInfo" method="execute">
-            <result name="success">teamPage.jsp</result>
-        </action-->
+        <action name="enterActivity" class="Actions.GetActivityResources" method="enterActivity">
+        </action>
+        <action name="exitActivity" class="Actions.GetActivityResources" method="exitActivity">
+        </action>
+        <action name="sendReport" class="Actions.SendMessage" method="report">
+            <result name="success"  type="redirect">enterTeam.action?teamID=${reportTeamID}</result>
+            <result name="fail">login.jsp</result>
+        </action>
+        <action name="testSend" class="Actions.testSend">
+        <result name="success"  type="redirect">testSend.jsp</result>
+    </action>
+        <action name="responseUser" class="Actions.SendMessage" method="responseUser">
+        </action>
+        <action name="changeRecordNum" class="Actions.PayMoney" method="changeRecordNum">
+        </action>
+        <action name="payTheMoney" class="Actions.PayMoney" method="payMoney">
+       </action>
         </package>
         </struts>

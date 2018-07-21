@@ -14,7 +14,7 @@ public class DBConnect {
             else {
                 String driver = "com.mysql.jdbc.Driver";
                 Class.forName(driver);
-
+//
 //                String user = "root";
 //                String password ="123456";
 //                String url = "jdbc:mysql://localhost:3306/db?useUnicode=true&characterEncoding=UTF-8";

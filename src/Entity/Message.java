@@ -25,6 +25,26 @@ public class Message {
     private boolean haveRead;
     private boolean havePic;
     private int product_id;
+    private String reportReason;
+    private String reportDetail;
+private int reportedTeamID;
+private int relatedProID;
+
+    public int getRelatedProID() {
+        return relatedProID;
+    }
+
+    public int getReportedTeamID() {
+        return reportedTeamID;
+    }
+
+    public String getReportDetail() {
+        return reportDetail;
+    }
+
+    public String getReportReason() {
+        return reportReason;
+    }
 
     public int getProduct_id() {
         return product_id;
@@ -124,6 +144,23 @@ public class Message {
                 }
                 if(typeInfo[0].equals("product")){
                     message.product_id=Integer.parseInt(typeInfo[1]);
+                }
+                if(typeInfo[0].equals("report")){
+                   message.reportedTeamID=Integer.parseInt(typeInfo[1]);
+                   if(typeInfo.length>1)
+                   message.reportReason=typeInfo[2];
+                   else
+                       message.reportReason="";
+                   message.reportDetail=message.getMessage_text();
+                }
+                if(typeInfo[0].equals("reportResponse")){
+                   message.reportedTeamID=Integer.parseInt(typeInfo[1]);
+                }
+                if(typeInfo[0].equals("comment")){
+                   if(typeInfo.length==1)
+                       message.relatedProID=7;
+                   else
+                    message.relatedProID=Integer.parseInt(typeInfo[1]);
                 }
                try {
                    message.sender_name = rs.getString("user_name");

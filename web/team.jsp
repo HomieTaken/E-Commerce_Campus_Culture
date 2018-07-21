@@ -3,6 +3,7 @@
 <%@ page import="Entity.Activity" %>
 <%@ page import="com.opensymphony.xwork2.ActionContext" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="Entity.Team" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <!-------------------组号---------------------------->
 
@@ -19,6 +20,8 @@
     <meta name="description" content="Source code generated using layoutit.com">
     <meta name="author" content="LayoutIt!">
 
+
+	  <link rel="alternate icon" href="img/qm.ico">
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 	<link href="css/bootstrap.css" rel="stylesheet">
@@ -29,21 +32,26 @@
   <script>createConn();</script>
   <%}%>
     <div class="container-fluid">
-
+<%Team team=Team.getTeam(Integer.parseInt(request.getAttribute("report_team_id").toString()));%>
 	<br>
 		 <ul class="nav fixed-top" style="background-color: #6C6C6C; height:70px;">
-			<a class="navbar-brand col-sm-3" href="index.jsp" style="color:#FFFFFF;margin-top:12px;font-size:25px"> QinG MAng-店铺 </a>
-			
-			<li class="nav-item col-sm-1" >
+			 <a class="navbar-brand col-sm-2" href="index.jsp" style="color:#FFFFFF;top:2px;font-size:25px"> QinG MAng-店铺 </a>
+			 <a class="navbar-brand" href="javascript:void(0)"
+				style="color:#FFFFFF;margin-top:40px;margin-left:-160px;font-size:14px;"> —<%=team.getTeamSchool()+" "+team.getTeamName()%>团队 </a>
+			 <a href="#modal-report" class="btn" data-toggle="modal" style="height:38px;position: relative;top: 18px;margin-left:0">
+				 <span class="glyphicon glyphicon-exclamation-sign" style="color: white"></span>
+			 </a>
+
+			<li class="nav-item col-sm-1" style="margin-left: 50px;" >
 			  <a class="nav-link" href="#showact" style="color:#FFFFFF;font-size:18px;margin-top:12px;">活动</a>
 			</li>
-			<li class="nav-item col-sm-2">
+			<li class="nav-item col-sm-1">
 			  <a class="nav-link" href="#showpro" style="color:#FFFFFF;font-size:18px;margin-top:12px;">商品</a>
 			</li>
-			<li class="nav-item col-sm-3">
-					  <form action="search_plus.action"  class="form-inline" style="margin-top:18px;">
-					  	<input name = "entry" class="form-control mr-sm-2" type="text" style="width: 200px;" placeholder="搜本店">
-					  	<button class="btn btn-default my-2 my-sm-0" type="submit" onclick="return checkSearch()" >
+			<li class="nav-item col-sm-4">
+					  <form action="search_plus.action"  class="form-inline" style="margin-top:18px;margin-left: 100px">
+					  	<input id="search" name = "entry" class="form-control mr-sm-2" type="text" style="width: 250px;" placeholder="搜本店">
+					  	<button class="btn btn-default my-2 my-sm-0" onclick="return checkSearch()" >
 					  		<span class="glyphicon glyphicon-search"></span>
 					  	</button>
 					  </form>
@@ -51,43 +59,48 @@
 
 			 <!------------------------------------------------------->
 			 <!---消息显示按钮-->
-			 <s:if test="#session.message_count!=null">
-				 <div class="col-md-1" style="margin-left:0px;margin-top: 18px;">
-					 <a href="enterMessageBox.action"><button type="button" class="btn btn-info">
-						 <span class="glyphicon glyphicon-envelope"></span>
-					 </button></a>
-				 </div></a>
+			 <%--<s:if test="#session.message_count!=null">--%>
+				 <%--<div class="col-md-1" style="margin-left:10px;margin-top: 18px;padding-left: 95px">--%>
+					 <%--<a href="enterMessageBox.action"><button type="button" class="btn btn-info">--%>
+						 <%--<span class="glyphicon glyphicon-envelope"></span>--%>
+					 <%--</button></a>--%>
+				 <%--</div>--%>
 
-				 <div id="messageCircle" class="badge-bg" style="margin-left:-70px;margin-top:10px;z-index:2; width:20px;
-    height:20px;
-    background-color:#F00;
-    border-radius:25px;display:none;">
-                            <span id="message_count" class="badge-span" style="    height:20px;
-    line-height:20px;
-    display:block;
-    color:#FFF;
-    text-align:center;"><s:if test="#session.message_count>0">
-								<s:property value="#session.message_count"/></s:if></span>
-				 </div>
-				 <s:if test="#session.message_count>0">
-					 <script>document.getElementById("messageCircle").style.display=""</script></s:if>
-			 </s:if>
+				 <%--<div id="messageCircle" class="badge-bg" style="margin-left:-70px;margin-top:10px;z-index:2; width:20px;--%>
+    <%--height:20px;--%>
+    <%--background-color:#F00;--%>
+    <%--border-radius:25px;display:none;">--%>
+                            <%--<span id="message_count" class="badge-span" style="    height:20px;--%>
+    <%--line-height:20px;--%>
+    <%--display:block;--%>
+    <%--color:#FFF;--%>
+    <%--text-align:center;"><s:if test="#session.message_count>0">--%>
+								<%--<s:property value="#session.message_count"/></s:if></span>--%>
+				 <%--</div>--%>
+				 <%--<s:if test="#session.message_count>0">--%>
+					 <%--<script>document.getElementById("messageCircle").style.display=""</script></s:if>--%>
+			 <%--</s:if>--%>
+             <%--<s:else>--%>
+                 <%--<div class="col-md-1"></div>--%>
+             <%--</s:else>--%>
 			 <!---------------------------------------------->
+
+             <li class="nav-item col-sm-1"></li>
 
 			<li class="nav-item ">
                 <s:if test="#session.user_name==null">
-                    <div style="margin-top:18px;margin-left:40px">
-                        <a href="login.jsp">登录</a>
-                        <a href="register.jsp">注册</a>
+                    <div style="margin-top:25px;margin-left:117px;">
+                        <a href="login.jsp" style="color: white;margin-right: 5px">登录</a>
+                        <span style="color: white">|</span>
+                        <a href="register.jsp" style="color: white;margin-left: 5px">注册</a>
                     </div>
                 </s:if>
                 <s:else>
-                    <div class="dropdown" style="margin-top:18px;margin-left:40px">
-                        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" style="text-shadow: black 5px 3px 3px;">
+                    <div class="dropdown" style="margin-top:18px;margin-left:10px;padding-left: 40px">
+                        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown">
                             <span class="glyphicon glyphicon-user"></span>&emsp;已登录
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item disabled" href="#">Action</a>
                             <a class="dropdown-item" href="/shoppingcart.jsp">购物车</a>
                             <a class="dropdown-item" href="/logout">退出登录</a>
                         </div>
@@ -95,7 +108,78 @@
                 </s:else>
             </li>
 		</ul>
-		
+
+		<!-----------举报团队------------>
+		<div class="row">
+			<div class="col-md-12">
+
+				<div class="modal fade" id="modal-report" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="myModalLabel">
+									举报
+								</h5>
+								<button type="button" class="close" data-dismiss="modal">
+									<span aria-hidden="true">×</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<form role="form"  enctype="multipart/form-data" class="form-horizontal" method="post" action="sendReport">
+									<input type="hidden" id="change-activity" name="reportTeamID" value="<%=request.getAttribute("report_team_id")%>" />
+									<div class="input-group">
+										<span class="col-md-3" style="margin-left:-5px">举报类型:</span>
+										<select name ="briefReportSchool" class="form-control" style="left:0px;top:-6px;width:250px;border-top-left-radius: 5px; border-top-right-radius: 5px;border-bottom-left-radius:5px; border-bottom-right-radius:5px; ">
+											<option >商品与实物不符</option>
+											<option>虚假商品</option>
+											<option>有害信息</option>
+											<option>色情信息</option>
+											<option>组织违法活动</option>
+										</select>
+									</div>
+									<br>
+									<div class="input-group">
+										<span class="col-md-3" style="margin-left:-5px">详细描述:</span>
+										<textarea name="detailReportSchool" cols="4" class="form-control" style="height: 120px;left:0px; border-top-left-radius: 5px; border-top-right-radius: 5px;border-bottom-left-radius:5px; border-bottom-right-radius:5px;" placeholder="请描述详情"></textarea>
+									</div>
+									<br><br>
+									<div class="input-group">
+									<label for="pictureFile">
+										添加图片：
+									</label>
+									<input type="file" accept=".png,.jpg,.jpeg,image/png,image/jpg,image/jpeg" name="pictureFile" class="form-control-file" id="pictureFile" />
+									</div>
+									<br><br>
+									<div class="form-group" style="margin-left:0%">
+										<div class="row">
+											<div class="col-md-4" style="margin-left: 10%">
+												<button type="submit" class="btn btn-warning btn-block">确认举报</button>
+											</div>
+											<div class="col-md-4" style="margin-left: 15%">
+												<button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">
+													<span aria-hidden="true">我再想想</span>
+												</button>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+							<div class="modal-footer">
+								<div style="font-size: 12px;position: relative;left: -130px;">您的举报将督促团队的进步，但也会影响团队的声誉，请慎重</div>
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+
+
+
+
+
 		<div class="row" style="margin-top:5%" id="showact">
 			<%
 				Activity[]activities= (Activity[]) request.getAttribute("ActsBriefView");
@@ -128,6 +212,21 @@
 					<tr>
 					<th>活动地点：</th><td><%=activities[i].getAddress()%></td>
 					</tr>
+						<tr>
+							<th>参加活动：</th><td>
+							<%if(activities[i].isHaveEntered()){%>
+							<a href="#" onclick="exitActivity(<%=activities[i].getActivityID()%>)" id="activity-exit-<%=activities[i].getActivityID()%>"
+							   role="button" class="btn btn-primary" style="margin-left:0%;">退出活动</a>
+								<a href="#" onclick="enterActivity(<%=activities[i].getActivityID()%>)" role="button"
+								   id="activity-enter-<%=activities[i].getActivityID()%>" class="btn btn-warning" style="margin-left:0%;display:none;">加入活动</a>
+							<%}else{%>
+								<a href="#" onclick="exitActivity(<%=activities[i].getActivityID()%>)" id="activity-exit-<%=activities[i].getActivityID()%>"
+								   role="button" class="btn btn-primary" style="margin-left:0%;display:none;">退出活动</a>
+							<a href="#" onclick="enterActivity(<%=activities[i].getActivityID()%>)" role="button"
+							   id="activity-enter-<%=activities[i].getActivityID()%>" class="btn btn-warning" style="margin-left:0%;">加入活动</a>
+							<%}%>
+							<td>
+						</tr>
 					</table>
 				</div>
 			</div>
@@ -159,9 +258,11 @@
 				</div>
 			</div>
 		</div-->
-		<div style="margin-left:90%;margin-top:1%">
+			<!----------------注释处----------------->
+		<!--div style="margin-left:90%;margin-top:1%">
 		<label><a href = "#">查看更多 >></a></label>
-		</div>
+		<!--/div-->
+			<!---------------------------------->
 		</div>
 		<br />
 		
@@ -202,7 +303,7 @@
 				<br>
 				<br>
 				<%}%>
-			  <%--<HR style= " FILTER: progid:DXImageTransform.Microsoft.Glow ( color= #6996b9 ,strength = 10) " width= "80%" color= #987 cb9 SIZE =1>--%>
+			  <HR style= " FILTER: progid:DXImageTransform.Microsoft.Glow ( color= #987cb9 ,strength = 10) " width= "80%" color= #987 cb9 SIZE =1>
 			<!--div class="media">
 				<img class="mr-3" alt="Bootstrap Media Preview" src="https://www.layoutit.com/img/sports-q-c-64-64-8.jpg">
 				<div class="media-body">
@@ -224,27 +325,91 @@
 			</div>
 			</div>
 			</div>
-			<div style="margin-left:90%;margin-top:1%">
+		<!------------注释处------------>
+			<!--div style="margin-left:90%;margin-top:1%">
 			<label><a href = "#">查看更多 >></a></label>
-			</div>
+			</div-->
+		<!------------------------>
 	</div>
+  </div>
 
 		<br><br><br>
-		<nav class="navbar navbar-expand-lg navbar-light" style="background-color:#ADADAD;">
-		<div class="row">
-		<div class="col-md-4">
-		</div>
-		<div  id="copyright" class="col-md-6">
-          <p style="margin-top:10px">2018@共享gis  All Rights Reserved. </p>
-          <p> 工信部备案号： xxxxx备xxxxx号 </p>          
-		  <p> 联系方式：qq:245522147    邮箱：2455221474@qq.com</p>
-		</div>
-		<img src="img/qm.png">
-		</div>
-		</nav>
+  <div style="background-color:#333;height: 300px;color: white;padding: 50px;">
+      <div class="row">
+          <div class="col-md-3">
+              <h3>网站简介</h3>
+              <br>
+              这是一个年轻的校园文化供销平台，<br>
+              我们致力于推动校园文化的碰撞与交流，<br>
+              在校园创业兴起的浪潮中，<br>
+              青云直上，破浪前行
+          </div>
+          <div  class="col-md-3">
+              <h3>团队成员</h3>
+              <br>
+              项目经理：张伟<br>
+              产品经理：郑晓欣<br>
+              技术总监：韩阳<br>
+              技术人员：周彪
+          </div>
+          <div  class="col-md-3">
+              <h3>联系我们</h3>
+              <br>
+              电话：13966029638<br>
+              邮箱：2455221474@qq.com<br>
+              地址：武汉大学信息学部<br>
+          </div>
+      </div>
+  </div>
 
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/scripts.js"></script>
+  <script>
+      function enterActivity(id) {
+          var xmlhttp;
+          if (window.XMLHttpRequest) {
+              // IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+              xmlhttp = new XMLHttpRequest();
+          }
+          else {
+              // IE6, IE5 浏览器执行代码
+              xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+          }
+          xmlhttp.open("GET", "enterActivity.action?activity_id=" + id, false);
+          xmlhttp.send();
+          if(document.getElementById("activity-exit-"+id)!=null){
+              document.getElementById("activity-exit-"+id).style.display="";
+          }
+          if(document.getElementById("activity-enter-"+id)!=null){
+              document.getElementById("activity-enter-"+id).style.display="none";
+          }
+          if(xmlhttp.responseText=="fail"){
+              window.location.href="/login.jsp";
+          }
+      }
+      function exitActivity(id) {
+          var xmlhttp;
+          if (window.XMLHttpRequest) {
+              // IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+              xmlhttp = new XMLHttpRequest();
+          }
+          else {
+              // IE6, IE5 浏览器执行代码
+              xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+          }
+          xmlhttp.open("GET", "exitActivity.action?activity_id=" + id, false);
+          xmlhttp.send();
+          if(document.getElementById("activity-enter-"+id)!=null){
+              document.getElementById("activity-enter-"+id).style.display="";
+          }
+          if(document.getElementById("activity-exit-"+id)!=null){
+              document.getElementById("activity-exit-"+id).style.display="none";
+          }
+          if(xmlhttp.responseText=="fail"){
+              window.location.href="/login.jsp";
+          }
+      }
+  </script>
   </body>
 </html>

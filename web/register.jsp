@@ -21,6 +21,8 @@
 <head>
     <title>青芒-注册</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="alternate icon" href="img/qm.ico">
     <!-- 引入 Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="css/style.css" rel="stylesheet">

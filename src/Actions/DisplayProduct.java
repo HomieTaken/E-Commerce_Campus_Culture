@@ -51,7 +51,7 @@ public class DisplayProduct extends ActionSupport  {
                 //System.out.println(rs1.getBlob("product_img"));
                 product.setName(rs1.getString("product_name"));
                 product.setPrice(rs1.getDouble("product_price"));
-                product.setAmount(rs1.getInt("product_amount"));
+                product.setAmount(rs1.getInt("product_sales"));
                 //System.out.println(rs1.getDouble("product_price"));
                 product.setTeamID(rs1.getInt("product_team_id"));
                 //System.out.println(rs1.getInt("product_team_id"));

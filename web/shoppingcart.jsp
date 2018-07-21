@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="Entity.ShoppingRecord" %>
+<%@ page import="Operations.ViewProduct" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,6 +14,7 @@
     <meta name="description" content="Source code generated using layoutit.com">
     <meta name="author" content="LayoutIt!">
 
+      <link rel="alternate icon" href="img/qm.ico">
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 	<link href="css/bootstrap.css" rel="stylesheet">
@@ -33,65 +35,77 @@
   <div class="container-fluid">
 		<br />
 		 <ul class="nav fixed-top" style="background-color: #6C6C6C; height:70px;">
-			<a class="navbar-brand col-sm-2" href="index.jsp" style="font-size: 30px;text-shadow: 0 0 10px white; color:#FFFFFF;margin-top:12px;"> QinG MAng </a>
-			<div class="col-sm-7 navbar-brand" style="font-size:23px;color:#FFFFFF;margin-top:18px;left:-35px">购物车</div>
+			<a class="navbar-brand col-sm-2" href="index.jsp" style="font-size: 30px; color:#FFFFFF;margin-top:12px;"> QinG MAng </a>
+			<div class="col-sm-8 navbar-brand" style="font-size:23px;color:#FFFFFF;margin-top:18px;left:-35px">购物车</div>
 
 			 <!------------------------------------------------------->
 			 <!---消息显示按钮-->
-			 <s:if test="#session.message_count!=null">
-			<div class="col-md-1" style="margin-left:0px;margin-top:18px;">
-				<a href="enterMessageBox.action"><button type="button" class="btn btn-info">
-						 <span class="glyphicon glyphicon-envelope"></span>
-					 </button></a>
-			 </div>
+			<%--<s:if test="#session.message_count!=null">--%>
+			<%--<div class="col-md-1" style="margin-left:10px;margin-top: 18px;padding-left: 85px">--%>
+				<%--<a href="enterMessageBox.action"><button type="button" class="btn btn-info">--%>
+						 <%--<span class="glyphicon glyphicon-envelope"></span>--%>
+					 <%--</button></a>--%>
+			 <%--</div>--%>
 
-				 <div id="messageCircle" class="badge-bg" style="margin-left:-70px;margin-top:10px;z-index:2; width:20px;
-    height:20px;
-    background-color:#F00;
-    border-radius:25px;display:none;">
-                            <span id="message_count"  class="badge-span" style="    height:20px;
-    line-height:20px;
-    display:block;
-    color:#FFF;
-    text-align:center;"><s:if test="#session.message_count>0">
-								<s:property value="#session.message_count"/></s:if></span>
-				 </div>
-			 <s:if test="#session.message_count>0">
-				 <script>document.getElementById("messageCircle").style.display=""</script></s:if>
-			 </s:if>
+				 <%--<div id="messageCircle" class="badge-bg" style="margin-left:-70px;margin-top:10px;z-index:2; width:20px;--%>
+    <%--height:20px;--%>
+    <%--background-color:#F00;--%>
+    <%--border-radius:25px;display:none;">--%>
+                            <%--<span id="message_count"  class="badge-span" style="    height:20px;--%>
+    <%--line-height:20px;--%>
+    <%--display:block;--%>
+    <%--color:#FFF;--%>
+    <%--text-align:center;"><s:if test="#session.message_count>0">--%>
+								<%--<s:property value="#session.message_count"/></s:if></span>--%>
+				 <%--</div>--%>
+			 <%--<s:if test="#session.message_count>0">--%>
+				 <%--<script>document.getElementById("messageCircle").style.display=""</script></s:if>--%>
+			 <%--</s:if>--%>
+             <%--<s:else>--%>
+                 <%--<div class="col-md-1"></div>--%>
+             <%--</s:else>--%>
 			 <!---------------------------------------------->
 
-
-			<li class="nav-item ">
-						<div class="dropdown" style="margin-top:18px;margin-left:40px">
-							<button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" style="text-shadow: black 5px 3px 3px;">
-								<span class="glyphicon glyphicon-user"></span>&emsp;已登录
-							</button>
-							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-								<a class="dropdown-item" href="logout.action">退出登录</a>
-							</div>
-						</div>
-					</li>
+             <li class="nav-item ">
+                 <s:if test="#session.user_name==null">
+                     <div style="margin-top:25px;margin-left:80px;">
+                         <a href="login.jsp" style="color: white;margin-right: 5px">登录</a>
+                         <span style="color: white">|</span>
+                         <a href="register.jsp" style="color: white;margin-left: 5px">注册</a>
+                     </div>
+                 </s:if>
+                 <s:else>
+                     <div class="dropdown" style="margin-top:18px;margin-left:10px;padding-left: 30px">
+                         <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown">
+                             <span class="glyphicon glyphicon-user"></span>&emsp;已登录
+                         </button>
+                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="left: 30px;">
+                             <a class="dropdown-item" href="/enterShopping.action">购物车</a>
+                             <a class="dropdown-item" href="/logout">退出登录</a>
+                         </div>
+                     </div>
+                 </s:else>
+             </li>
 		</ul>
+	  <div class="row" style="margin-top:5%">
+
+		  <div class="col-md-12">
 			<%ShoppingRecord[] records=(ShoppingRecord[]) request.getAttribute("cartDetail");
 			if(records!=null){
 			for(int i=0;i<records.length;i++){%>
-		<div class="row" style="margin-top:5%">
-				
-			<div class="col-md-12">
 
 				<div class="card" style="-webkit-box-shadow: #666 0px 0px 10px">
 					<div class="card-header">
 						<div class="row">
-						 <a class="card-link collapsed col-md-11" data-toggle="collapse"  href="#card-element-1"><%=records[i].getName()%></a>
+						 <a class="card-link collapsed col-md-11" data-toggle="collapse"  href="#card-element-<%=i%>"><%=records[i].getName()%></a>
 						 <a href="#modal-delete" deleteNum="<%=records[i].getProductID()%>&<%=records[i].getProductID()%>" onclick="deleteRecord(this)" data-toggle="modal" role="button" class="btn" style="height:30px; margin-left:50px"><span class="glyphicon glyphicon-trash"></span></a>
 						</div>
 					</div>
-					<div id="card-element-1" class="collapse show">
+					<div id="card-element-<%=i%>" class="collapse show">
 					<div class="card-body">
 							<div class="row" style="margin:10px">
 								<!--图片-->
-								<div class="col-md-4">
+								<div class="col-md-2">
 									<!--img class="img-thumbnail" alt="Bootstrap Image Preview" style="height:100px" src="img/WHUpro1.jpg" /-->
 									<a href="enterProduct.action?productID=<%=records[i].getProductID()%>"><img class="img-thumbnail" alt="Bootstrap Image Preview" style="height:100px" src="<%=basePath%>/getPic.action?productID=<%=records[i].getProductID()%>" /></a>
 								</div>
@@ -99,22 +113,25 @@
 								<div class="col-md-2" style="margin-top:35px">
 									价格：<%=records[i].getPrice()%>
 								</div>
-								<!--数量-->
-								购买数量：
 								<div class="col-md-2" style="margin-top:35px">
-                                    <form action="changeProNum">
-									<input type="number"name="number" class="form-control" value="<%=records[i].getAmount()%>" min="1" style="height:30px;width:100px" onclick="changeAmount(<%=i%>,<%=records[i].getPrice()%>,this.value)">
-                                    <iframe id="rfFrame" name="rfFrame" src="about:blank" style="display:none;"></iframe>
-                                    <input type="hidden" name="category" value="<%=records[i].getProductID()%>" />
-                                    <input type="hidden" name="userID" value="<%=records[i].getUserID()%>" />
-                                    </form>
+									<%int maxNum=ViewProduct.viewGivenPro(records[i].getProductID()).getAmount();%>
+									库存：<%=maxNum%>件
+								</div>
+								<!--数量-->
+								<span style="margin-top:33px;">购买数量：</span>
+								<div class="col-md-2" style="margin-top:33px">
+                                    <!--form method="post" action="changeProNum" id="myForm<--%=i%>"-->
+									<input type="number"name="number" id="recordNumChange<%=records[i].getRecord_id()%>" class="form-control" value="<%=records[i].getAmount()%>" min="1" max="<%=maxNum%>" style="height:30px;width:100px" oninput="checkNum(this);changeAmount(<%=i%>,<%=records[i].getRecord_id()%>,<%=records[i].getPrice()%>,this.value)" onclick="changeAmount(<%=i%>,<%=records[i].getRecord_id()%>,<%=records[i].getPrice()%>,this.value)">
+                                    <!--input type="hidden" name="category" value="<--%=records[i].getProductID()%>" />
+                                    <input type="hidden" name="userID" value="<--%=records[i].getUserID()%>" />
+                                    </form-->
 								</div>
 								<!--总价-->
-								<div id="checkbox<%=i%>money" money="<%=records[i].getPrice()*records[i].getAmount()%>" class="col-md-3 text-danger" style="margin-top:35px">
+								<div id="checkbox<%=i%>money"   money="<%=records[i].getPrice()*records[i].getAmount()%>" class="col-md-2 text-danger" style="margin-top:35px">
 									总价：<%=records[i].getPrice()*records[i].getAmount()%>
 								</div>
 								<div class="checkbox checkbox-primary col-md-1" style="margin-top:35px;">
-									<input id="checkbox<%=i%>" class="styled" type="checkbox" onclick="addMoney()">
+									<input id="checkbox<%=i%>" class="styled" value="<%=records[i].getRecord_id()%>" type="checkbox" onclick="addMoney()">
 									<label for="checkbox<%=i%>">
 									</label>
 								</div>
@@ -129,11 +146,9 @@
 				<br />
 				<%}%>
 				<%}%>
-
 				</div>		
 		</div>
 		<br />
-<br><br><br>
 		<!--提交-->
 		<div class="col-md-12">
 		<div class="row" style="background-color:#D0D0D0; height:50px">
@@ -222,7 +237,7 @@
 		<br /><br />
 	
 	</div>
-
+  <!--iframe id="rfFrame" name="rfFrame" src="about:blank" style="display:none;"></iframe-->
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/scripts.js"></script>
@@ -243,7 +258,7 @@
           }
           <%}%>
       }
-  function changeAmount(index,price,amount){
+  function changeAmount(index,record_id,price,amount){
           var sss="总价："+parseFloat(price*amount);
           document.getElementById("checkbox"+index+"money").innerHTML=sss;
       document.getElementById("checkbox"+index+"money").setAttribute("money",price*amount);
@@ -253,8 +268,33 @@
       else{
           addMoney();
       }
-      document.forms[0].target="rfFrame";
-          document.forms[0].submit();
+      changeRecordNum(record_id,amount);
+   /*   document.getElementById("myForm"+index).target="rfFrame";
+      document.getElementById("myForm"+index).submit();*/
+      /*document.forms[0].target="rfFrame";
+          document.forms[0].submit();*/
+  }
+      function checkNum(item) {
+          var value=item.value;
+          var regx = /^[0-9]+$/;
+          if(!regx.test(value)) {
+              item.value = 1;
+          }
+      }
+  function changeRecordNum(record_id,num){
+      var xmlhttp;
+      if (window.XMLHttpRequest)
+      {
+          // IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+          xmlhttp=new XMLHttpRequest();
+      }
+      else
+      {
+          // IE6, IE5 浏览器执行代码
+          xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+      }
+          xmlhttp.open("GET", "changeRecordNum?record_id=" +record_id+"&num="+num, true);
+          xmlhttp.send();
   }
   function deleteRecord(obj){
           deleteRecordNum=obj.getAttribute("deleteNum");
@@ -282,6 +322,17 @@
       }
   }
   function payMoney(){
+          var str="";
+      <%for(int i=0;i<records.length;i++){%>
+      if(document.getElementById('checkbox<%=i%>').checked){
+          var m=document.getElementById('checkbox<%=i%>').value;
+          if(str=="")
+              str=m;
+          else{
+              str=str+","+m;
+		  }
+      }
+      <%}%>
       var xmlhttp;
       if (window.XMLHttpRequest)
       {
@@ -293,14 +344,21 @@
           // IE6, IE5 浏览器执行代码
           xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
       }
-          <%for(int i=0;i<records.length;i++){%>
-         if( document.getElementById('checkbox<%=i%>').checked) {
-             xmlhttp.open("GET", "payMoney?record_id=" +<%=records[i].getRecord_id()%>, false);
+      xmlhttp.open("GET", "payTheMoney?str=" +str, false);
+      xmlhttp.send();
+      var info=xmlhttp.responseText;
+      if(info=="fail"){
+          alert("库存不足，购买失败")
+	  }
+      window.location.href="/enterShopping.action";
+      /*    <--%for(int i=0;i<records.length;i++){%>
+         if( document.getElementById('checkbox<--%=i%>').checked) {
+             xmlhttp.open("GET", "payMoney?record_id=" +<--%=records[i].getRecord_id()%>, false);
              xmlhttp.send();
          }
           //-----------------------------添加删除该商品购物车记录和发送消息到商家代码-----------------------------
-          <%}%>
-      window.location.href="/enterShopping.action";
+          <--%}%>
+      window.location.href="/enterShopping.action";*/
 	  //------------------------------------------添加刷新本页面代码------------------------------------------------------------
   }
   </script>

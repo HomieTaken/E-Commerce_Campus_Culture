@@ -1,10 +1,10 @@
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="Entity.User" %>
 <%@ page import="java.sql.ResultSet" %>
 <%@ page import="DataBase.DBOperation" %>
 <%@ page import="java.sql.SQLException" %>
-<%@ page import="Entity.UserType" %>
-<%@ page import="Entity.TeamApplication" %><%--
+<%@ page import="Operations.MessageOperate" %>
+<%@ page import="Entity.*" %><%--
   Created by IntelliJ IDEA.
   User: Administrator
   Date: 2018/7/12/012
@@ -18,12 +18,38 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Bootstrap 4, from LayoutIt!</title>
+    <title>青芒-学校主页</title>
 
+    <link rel="alternate icon" href="img/qm.ico">
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/extend.css" rel="stylesheet">
+
+    <style>
+        .mytextarea {
+            overflow: auto;
+            word-break: break-all;
+            height: 80px;
+            width: 400px;
+            color: #000;
+            font-size: 1em;
+            resize: none;
+            box-shadow: 2px 2px 2px #F0F0F0 inset;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            border-bottom-left-radius:5px;
+            border-bottom-right-radius:5px;
+        }
+
+        .mytextarea:focus{
+            outline: 0;
+            border-color: rgba(82, 168, 236, 0.8);
+            -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
+            -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
+        }
+    </style>
 
 </head>
 <%
@@ -72,9 +98,28 @@
 %>
 <body>
 <ul class="nav fixed-top" style="background-color: #6C6C6C; height:70px;">
-    <a class="navbar-brand col-sm-10" href="#" style="color:#FFFFFF;margin-top:12px;font-size:25px"> QinG MAng </a>
+    <a class="navbar-brand col-sm-9" href="javascript:void(0)" style="color:#FFFFFF;margin-top:12px;font-size:25px"> QinG MAng </a>
 
-    <a class="navbar-brand col-sm-2" href="#" style="color:#FFFFFF;margin-top:12px;font-size:25px"><%=schoolName%></a>
+    <a class="navbar-brand col-sm-1" href="javascript:void(0)" style="color:#FFFFFF;margin-top:12px;font-size:25px;margin-left: 10px;"><%=schoolName%></a>
+    <li class="nav-item col-sm-2">
+        <s:if test="#session.user_name==null">
+            <div style="margin-top:25px;margin-left:80px;">
+                <a href="login.jsp" style="color: white;margin-right: 5px">登录</a>
+                <span style="color: white">|</span>
+                <a href="register.jsp" style="color: white;margin-left: 5px">注册</a>
+            </div>
+        </s:if>
+        <s:else>
+            <div class="dropdown" style="margin-top:18px;margin-left:20px">
+                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown">
+                    <span class="glyphicon glyphicon-user"></span>&emsp;已登录
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="logout.action">退出登录</a>
+                </div>
+            </div>
+        </s:else>
+    </li>
 </ul>
 
 <!--导航栏-->
@@ -82,26 +127,26 @@
     <li class="vertical-li"><a class="homepg" href="javascript:return false;">学校主页</a></li>
     <li class="vertical-li">
         <a id="a0" href="javascript:void(0)" onclick="showPart(0)" style="background-color:#D0D0D0;">
-            管理团队&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-            <span id="span0" class="glyphicon glyphicon-chevron-right"></span>
+            管理团队
+            <span id="span0" class="glyphicon glyphicon-chevron-right" style="float: right;top:5px;"></span>
         </a>
     </li>
     <li class="vertical-li">
         <a id="a1" href="javascript:void(0)" onclick="showPart(1)">
-            团创申请&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-            <span id="span1" class="glyphicon glyphicon-chevron-right" style="display: none"></span>
+            团创申请
+            <span id="span1" class="glyphicon glyphicon-chevron-right" style="float: right;top:5px;display: none"></span>
         </a>
     </li>
     <li class="vertical-li">
         <a id="a2" href="javascript:void(0)" onclick="showPart(2)">
-            用户举报&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-            <span id="span2" class="glyphicon glyphicon-chevron-right" style="display: none"></span>
+            用户举报
+            <span id="span2" class="glyphicon glyphicon-chevron-right" style="float: right;top:5px;display: none"></span>
         </a>
     </li>
     <li class="vertical-li">
         <a id="a3" href="javascript:void(0)" onclick="showPart(3)">
-            其他信息&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-            <span id="span3" class="glyphicon glyphicon-chevron-right" style="display: none"></span>
+            其他信息
+            <span id="span3" class="glyphicon glyphicon-chevron-right" style="float: right;top:5px;display: none"></span>
         </a>
     </li>
 </ul>
@@ -326,53 +371,91 @@
             }
         %>
     </div>
+
+
+<%
+    String path = request.getContextPath();
+    String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+<%
+    Object id=session.getAttribute("user_id");
+    Message[] messages=new Message[0];
+   // ArrayList<Message>message=new ArrayList<Message>();
+    if(id!=null){
+       /* messages=MessageOperate.getAllMessage(Integer.parseInt(id.toString()));
+        for(int i=0;i<messages.length;i++){
+            if(messages[i].getType().equals("report")){
+                message.add(messages[i]);
+            }
+        }*/
+       messages=MessageOperate.getReportedMessage(Integer.parseInt(id.toString()));
+    }
+%>
+
             <!--处理举报-->
     <div id="card-sum" style="margin-top:20px;display:none;">
+        <%
+            for(int i=0;i<messages.length;i++){
+        %>
         <div class="card">
             <div class="card-header">
-                <a class="card-link collapsed" data-toggle="collapse" data-parent="#card-sum" href="#card-report-1">
-                    收到来自用户<span style="color:red;">YangHan</span>对<strong style="font-size:15px;">"零行"</strong>团队的举报
+                <a class="card-link collapsed" data-toggle="collapse" data-parent="#card-sum" href="#card-report-<%=messages[i].getMessage_id()%>">
+                    收到来自用户<span style="color:red;"><%=messages[i].getSender_name()%></span>对<strong style="font-size:15px;"><%=Team.getTeam(messages[i].getReportedTeamID()).getTeamName()%></strong>团队的举报
+                    <%
+                        if(!messages[i].getHaveRead()){
+                    %>
+                    <span style="color: red;float: right;" id="new_<%=messages[i].getMessage_id()%>">new!</span>
+                    <%
+                        }
+                    %>
                 </a>
             </div>
-            <div id="card-report-1" class="collapse">
+            <div id="card-report-<%=messages[i].getMessage_id()%>" class="collapse">
                 <div class="card-body">
                     <table class="table">
-                        <tr><td>举报类型：虚假商品</td></tr>
-                        <tr><td>详细描述：付钱了不给货。</td></tr>
+                        <tr><td>举报类型：<%=messages[i].getReportReason()%></td></tr>
+                        <tr><td>详细描述：<%=messages[i].getReportDetail()%></td></tr>
+                        <%if(messages[i].getHavePic()){%>
+
+                        <tr><td>附件图片：<img height="200px"
+
+                                          src="<%=basePath%>/getPic.action?messageID=<%=messages[i].getMessage_id()%>" /></td></tr>
+
+                        <tr><td>查看原图：<a href="<%=basePath%>/getPic.action?messageID=<%=messages[i].getMessage_id()%>"  target="_blank">附件图片</a></td></tr>
+
+                        <%}%>
+
+                        <tr><td>
+                            <%
+                                if(!messages[i].getHaveRead()){
+                            %>
+                            <div id="form_<%=messages[i].getMessage_id()%>">
+                                <input id="send_id_<%=messages[i].getMessage_id()%>" type="hidden" name="sender_id" value="<%=id%>" />
+                                <input id="receiver_id_<%=messages[i].getMessage_id()%>" type="hidden" name="receiver" value="<%=messages[i].getSender_id()%>" />
+                                <input id="team_id_<%=messages[i].getMessage_id()%>" type="hidden" name="teamID" value="<%=messages[i].getReportedTeamID()%>" />
+                                <span style="position: relative;top:-65px;margin-left:31px ">反馈：</span>
+                                <textarea id="backMessage_<%=messages[i].getMessage_id()%>" type="text" name="message" class="mytextarea" style="position: relative;top: 3px;left: -3px;"></textarea>
+                                <br>
+                                <button id="message_btn_<%=messages[i].getMessage_id()%>" class="btn btn-info" style="margin-top: 20px;margin-left: 80px" onclick="sendBack(this)">提交</button>
+                            </div>
+                            <%
+                            }else {
+                            %>
+                            <%
+                                }
+                            %>
+                        </td></tr>
                     </table>
                 </div>
             </div>
         </div>
-        <div class="card">
-            <div class="card-header">
-                <a class="card-link collapsed" data-toggle="collapse" data-parent="#card-sum" href="#card-report-2">
-                    收到来自用户<span style="color:red;">珞珈风梓</span>对<strong style="font-size:15px;">"一码平川"</strong>团队的举报
-                </a>
-            </div>
-            <div id="card-report-2" class="collapse">
-                <div class="card-body">
-                    <table class="table">
-                        <tr><td>举报类型：商品与实物不符</td></tr>
-                        <tr><td>详细描述：网购了个范冰冰，送了个贾玲</td></tr>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header">
-                <a class="card-link collapsed" data-toggle="collapse" data-parent="#card-sum" href="#card-report-3">
-                    收到来自用户<span style="color:red;">珞珈风梓</span>对<strong style="font-size:15px;">"一码平川"</strong>团队的举报
-                </a>
-            </div>
-            <div id="card-report-3" class="collapse">
-                <div class="card-body">
-                    <table class="table">
-                        <tr><td>举报类型：商品与实物不符</td></tr>
-                        <tr><td>详细描述：网购了个范冰冰，送了个贾玲</td></tr>
-                    </table>
-                </div>
-            </div>
-        </div>
+        <%
+            }
+        %>
+
+
+        <%%>
+        <%%>
     </div>
     <br /><br /><br />
 
@@ -381,7 +464,7 @@
             优秀的学校必定有很浓厚的研究学术的风气，进了大学就应不忘记推进学术文化这个神圣的使命。
         </p>
         <footer class="blockquote-footer">
-            朱光潜 <cite>（国立武汉大学教务长）</cite>
+            朱光潜
         </footer>
     </blockquote>
 
@@ -482,6 +565,38 @@
                 alert("服务器错误!");
             }
         })
+    }
+
+    function sendBack(self) {
+        var msg_id=self.getAttribute('id');
+        msg_id=msg_id.replace("message_btn_","");
+        //send_id_,receiver_id_,team_id_,message_id_获取传值
+        //form_，new_删除
+        var id="#send_id_"+msg_id;
+        var send_id=$(id).val();
+        id="#receiver_id_"+msg_id;
+        var receiver_id=$(id).val();
+        id="#team_id_"+msg_id;
+        var team_id=$(id).val();
+        id="#backMessage_"+msg_id;
+        var content=$(id).val();
+        var args={
+            sender_id:send_id,
+            receiver:receiver_id,
+            teamID:team_id,
+            message:content,
+            messageID:msg_id
+        };
+        $.post("testSend",args,function (data) {
+            if(data==="true"){
+                $("#form_"+msg_id).remove();
+                $("#new_"+msg_id).remove();
+            }else if(data==="false")
+                alert("消息反馈失败！");
+            else
+                alert("数据返回异常！");
+        });
+
     }
 </script>
 </body>

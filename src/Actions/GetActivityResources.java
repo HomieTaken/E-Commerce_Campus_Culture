@@ -2,6 +2,7 @@ package Actions;
 
 import Entity.Message;
 import Operations.MessageOperate;
+import Operations.ViewTeam;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.ServletActionContext;
@@ -64,6 +65,56 @@ try {
 catch (Exception e){
     e.printStackTrace();
 }
+        return null;
+    }
+    public String enterActivity(){
+       Object userID=ActionContext.getContext().getSession().get("user_id");
+        try {
+            HttpServletResponse response = ServletActionContext.getResponse();
+            response.setContentType("text/plain;charset=utf-8");
+
+            ServletOutputStream outputStream = response.getOutputStream();
+            if(userID==null) {
+                outputStream.write("fail".getBytes("utf-8"));
+            }
+            else{
+                ViewTeam.enterActivity(activity_id,(int)userID);
+                ViewTeam.sendEnterMessage(activity_id,userID);
+                outputStream.write("".getBytes("utf-8"));
+            }
+
+            outputStream.flush();
+
+            outputStream.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public String exitActivity(){
+        int userID=(int)ActionContext.getContext().getSession().get("user_id");
+        try {
+            HttpServletResponse response = ServletActionContext.getResponse();
+            response.setContentType("text/plain;charset=utf-8");
+
+            ServletOutputStream outputStream = response.getOutputStream();
+            if(userID==0) {
+                outputStream.write("fail".getBytes("utf-8"));
+            }
+            else{
+                ViewTeam.exitActivity(activity_id,userID);
+                ViewTeam.sendExitMessage(activity_id,userID);
+                outputStream.write("".getBytes("utf-8"));
+            }
+
+            outputStream.flush();
+
+            outputStream.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
         return null;
     }
 }

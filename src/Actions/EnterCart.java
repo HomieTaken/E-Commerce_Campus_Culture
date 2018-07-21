@@ -10,10 +10,11 @@ public class EnterCart implements Action {
     @Override
     public String execute() {
         ActionContext actionContext=ActionContext.getContext();
-        int userID = (int)actionContext.getSession().get("user_id");
-        if(userID==0){
+         Object user_id = actionContext.getSession().get("user_id");
+        if(user_id==null){
             return "fail";
         }
+        int userID=(int) user_id;
         ShoppingRecord[]records=ViewProduct.viewShoppingPro(userID);
         if(records.length>0)
         ActionContext.getContext().put("cartDetail",records);//加入商品预览

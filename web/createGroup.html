@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>创建兴趣小组</title>
+</head>
+<body>
+<form action="" method="post" role="form">
+    <div class="row">
+        <div class="input-group col-sm-6 " style="margin-left:25%">
+			    <span class="input-group-addon" style="border-top-left-radius: 20px; border-bottom-left-radius:20px;">
+			        <span class="glyphicon glyphicon-lock">
+			        </span>
+			    </span>
+            <input type="text" id="searchStr" name="searchStr" value="请输入姓名"
+                   onkeyup="this.value=this.value.replace(/[^\u4E00-\u9FA5]/g,'')" >
+        </div>
+        <div class="col-sm-2">
+            <em id="name"></em>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="input-group col-sm-6" style="margin-left:25%">
+                <span class="input-group-addon" style="border-top-left-radius: 20px; border-bottom-left-radius:20px;">
+			        <span class="glyphicon glyphicon-lock">
+			        </span>
+			    </span>
+            <input name = "userPassword" style="border-top-right-radius: 20px; border-bottom-right-radius:20px;" id="userpwd" placeholder="请输入密码" type="password" class="form-control">
+        </div>
+        <div class="col-sm-2">
+            <em id="pwd"></em>
+        </div>
+    </div>
+    <br />
+    <br />
+    <div class="form-group" style="margin-left:34%">
+        <div class="col-sm-offset-2 col-md-6">
+            <button class="btn btn-info btn-block">登录&emsp;
+                <span class="glyphicon glyphicon-share-alt" >
+			        </span>
+            </button>
+        </div>
+    </div>
+</form>
+</body>
+</html>

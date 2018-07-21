@@ -34,6 +34,8 @@ public class MessageBox implements Action {
             int id=(int)actionContext.getSession().get("user_id");
             Message[]messages=MessageOperate.getAllMessage(id);
             Map<String,ArrayList<Message>>messageMap=new HashMap<String,ArrayList<Message>>();
+            if(messages==null)
+                messages=new Message[0];
             for(int i=0;i< messages.length;i++){
                 ArrayList<Message>arrayList=messageMap.get(messages[i].getType());
                 if(arrayList==null) {
@@ -46,8 +48,9 @@ public class MessageBox implements Action {
                 }
             }
             actionContext.put("messages",messageMap);
+            return SUCCESS;
         }
-        return SUCCESS;
+        return "fail";
     }
     public String sendProductMessage(){
         ActionContext actionContext=ActionContext.getContext();

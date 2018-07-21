@@ -49,11 +49,18 @@ public class LoginAction extends ActionSupport {
 
     @Override
     public void validate() {
-        String sql = "select * from user where user_name = '" + this.getUserName()+"' and user_password = '"+ this.getUserPassword() +"'";
+        String sql = "select * from user where user_name = '" + this.getUserName()+"'";
         System.out.println(sql);
         try {
             ResultSet rs = DBOperation.getRS(sql);
-            if (!rs.next()) {
+            String pwd="";
+            int i=0;
+            while (rs.next()){
+                if(i==0)
+                    pwd=rs.getString("user_password");
+                i++;
+            }
+            if (i!=1||!pwd.equals(userPassword)) {
                 addFieldError("userName","用户名或密码错误，请重新输入！");
 //                msg = "用户名或密码错误，请重新输入！";
 //                System.out.println(msg);
@@ -84,9 +91,10 @@ public class LoginAction extends ActionSupport {
 
         ActionContext actionContext = ActionContext.getContext();
         Map<String, Object> session = actionContext.getSession();
-        session.remove("user_name");
+        session.clear();
+        /*session.remove("user_name");
         session.remove("user_id");
-        session.remove("user_type");
+        session.remove("user_type");*/
         session.put("user_name", this.getUserName());
         session.put("user_id", userID);
         session.put("user_type", userType);

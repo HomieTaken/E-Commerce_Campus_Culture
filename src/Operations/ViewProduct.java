@@ -10,9 +10,24 @@ import java.util.Map;
 
 public class ViewProduct {
     public static CultureProduct viewGivenPro(int id){
-        CultureProduct pro=CultureProduct.getProduct(
-                "select * from product where product_id="+id)[0];
-        return pro;
+        String sql="select * from product where product_id="+id;
+        try {
+            ResultSet rs = DBOperation.getRS(sql);
+            CultureProduct ac=null;
+            if (rs.next()) {
+                ac=new CultureProduct();
+                ac.setPrice(rs.getDouble("product_price"));
+                ac.setDescription(rs.getString("product_info"));
+                ac.setName(rs.getString("product_name"));
+                ac.setTeamID(rs.getInt("product_team_id"));
+                ac.setPicture(rs.getBlob("product_img"));
+                ac.setProductID(rs.getInt("product_id"));
+                ac.setAmount(rs.getInt("product_amount"));
+            }
+            return ac;
+        }
+        catch(Exception e){}
+        return null;
     }
     public static boolean addPro(String productID, int userID,int num){
         try {
@@ -55,9 +70,18 @@ public class ViewProduct {
         ShoppingRecord record=ShoppingRecord.getRecord(sql)[0];
         return record;
     }
-    public static void changeRecordNum(int userID,int category,int num){
+  /*  public static void changeRecordNum(int userID,int category,int num){
         try {
             String sql = "UPDATE shoppingchart SET amount=" + num + " WHERE user_id=" + userID + " and product_id=" + category;
+            DBOperation.insertOperate(sql);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }*/
+    public static void changeRecordNum(int userID,int record_id,int num){
+        try {
+            String sql = "UPDATE shoppingchart SET amount=" + num + " WHERE user_id=" + userID + " and record_id=" + record_id;
             DBOperation.insertOperate(sql);
         }
         catch (Exception e){
@@ -92,10 +116,10 @@ public class ViewProduct {
         }
         return result;
     }
-    public static void addAddress(int userID,String address){
+    public static void addAddress(int userID,String address,String receiverName,String phoneNumber){
         try {
-            String sql="insert into user_address(user_id,user_address) values("
-                    +userID+",'"+address+"')";
+            String sql="insert into user_address(user_id,user_address,receiver_name,user_phone) values("
+                    +userID+",'"+address+"','"+receiverName+"','"+phoneNumber+"')";
             DBOperation.insertOperate(sql);
         }
         catch (Exception e){

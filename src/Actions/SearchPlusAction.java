@@ -48,7 +48,7 @@ public class SearchPlusAction extends ActionSupport{
     @Override
     public String execute() throws Exception {
 //        byte[] b=entry.getBytes("ISO-8859-1");//用tomcat的格式（iso-8859-1）方式去读。
-//        entry = new String(b,"utf-8");;
+//        entry = new String(b,"utf-8");
         this.setTeamID((int) ActionContext.getContext().getSession().get("teamID"));
         String  sql = "select * from (select * from product where product_team_id = '"+this.getTeamID() +"' )as team_product where product_name  like '%" + this.getEntry() + "%'";
         System.out.println(sql);

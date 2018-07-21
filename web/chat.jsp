@@ -25,7 +25,7 @@
     <!-- No Baidu Siteapp-->
     <meta http-equiv="Cache-Control" content="no-siteapp" />
 
-    <link rel="alternate icon" href="assets/i/favicon.ico">
+    <link rel="alternate icon" href="img/qm.ico">
     <link rel="stylesheet" href="assets/css/amazeui.min.css">
     <link rel="stylesheet" href="assets/css/app.css">
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -52,7 +52,7 @@
         }
 
         .list-group a:hover:not(.active){
-            background-color:#80FFFF;
+            background-color: #d0d6d6;
         }
 
         .chatul li{
@@ -71,25 +71,37 @@
 <%
     ArrayList<InterestGroup> groups=new ArrayList<InterestGroup>();
     ArrayList<InterestGroup> ownerGroups=new ArrayList<InterestGroup>();
-    try {
+    int user_id=-1;
+    if(session.getAttribute("user_id")!=null) {
+        user_id = (int) session.getAttribute("user_id");
+        try {
 //        String sql="select * from interest_group where group_id in (select group_id from group_members where user_id=\'"+session.getAttribute("user_id")+"\')";
-        String sql="select * from interest_group";
-        ResultSet rs=DBOperation.getRS(sql);
+            String sql = "select * from interest_group";
+            ResultSet rs = DBOperation.getRS(sql);
 
-        int user_id=(int) session.getAttribute("user_id");
-        while (rs.next()) {
-            InterestGroup group = new InterestGroup();
-            group.setOwnerID(rs.getInt("group_owner_id"));
-            group.setGroupID(rs.getInt("group_id"));
-            group.setGroupName(rs.getString("group_name"));
-            group.setGroupInfo(rs.getString("group_info"));
-            if (user_id==rs.getInt("group_owner_id"))
-                ownerGroups.add(group);
-            else
-                groups.add(group);
+            while (rs.next()) {
+                InterestGroup group = new InterestGroup();
+                group.setOwnerID(rs.getInt("group_owner_id"));
+                group.setGroupID(rs.getInt("group_id"));
+                group.setGroupName(rs.getString("group_name"));
+                group.setGroupInfo(rs.getString("group_info"));
+                if (user_id == rs.getInt("group_owner_id"))
+                    ownerGroups.add(group);
+                else
+                    groups.add(group);
+                }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+    }
+%>
+<%
+    if(user_id==-1){
+%>
+<script>
+    window.location.href="login.jsp";
+</script>
+<%
     }
 %>
 <body>
@@ -98,87 +110,135 @@
     <a class="navbar-brand col-sm-7" href="index.jsp" style="color:#FFFFFF;margin-top:12px;font-size:25px"> QinG MAng-兴趣小组 </a>
 
     <li class="nav-item col-sm-3">
-        <form class="form-inline" style="margin-top:18px;">
-            <input class="form-control mr-sm-2" type="text" style="width: 200px;height: 36px;font-size: 16px;" placeholder="搜小组">
-            <button class="btn btn-default my-2 my-sm-0" type="submit" style="font-size: 16px;height: 34px;">
+        <div class="row" style="margin-top:18px;">
+            <input id="searchValue" class="form-control mr-sm-2" type="text" style="width: 200px;height: 36px;font-size: 16px;" placeholder="搜小组">
+            <button class="btn btn-default my-2 my-sm-0" style="font-size: 16px;height: 34px;" onclick="searchGroup()">
                 <span class="glyphicon glyphicon-search"></span>
             </button>
-        </form>
-    </li>
-    <li class="nav-item ">
-        <div class="dropdown" style="margin-top:18px;margin-left:40px;">
-            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" style="text-shadow: black 5px 3px 3px;height: 36px;font-size: 16px;margin-left: 30px;">
-                <span class="glyphicon glyphicon-user"></span>&emsp;已登录
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item disabled" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <a class="dropdown-item" href="#">Something else here</a>
-            </div>
         </div>
     </li>
+
 </ul>
 
 <div class="row" style="margin-top: 5%;">
 
+    <div class="modal fade" id="modal-agree-apply" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel1">
+                        创建兴趣小组
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="post">
+                    </form>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" >
+                        确认
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        取消
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
     <!--兴趣小组列表-->
-    <div class="col-md-3">
-        <div class="list-group" style="margin-left: 20px;margin-top: 20px;">
-            <a href="javascript:return false;" class="list-group-item list-group-item-action active" style="">兴趣小组</a>
-            <a href="javascript:void(0)" class="list-group-item list-group-item-action">我创建的</a>
-            <div id="ownergroups">
+    <div id="groupList" class="col-md-2">
+        <div class="list-group">
+            <%--<a href="javascript:return false;" class="list-group-item list-group-item-action active">兴趣小组</a>--%>
+            <%--<div class="row">--%>
+                <%--<a href="javascript:void(0)" class="list-group-item list-group-item-info" style="background-color: #3C6C6C;color: white">我创建的--%>
+                    <%--&lt;%&ndash;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ndash;%&gt;--%>
+                <%--</a>--%>
+                    <%--&lt;%&ndash;<a href="javascript:void(0)" data-toggle="modal" style="background-color: #3C6C6C;color: white;padding-right: 4px;padding-top: 17px">&ndash;%&gt;--%>
+                    <%--&lt;%&ndash;<span class="glyphicon glyphicon-plus"></span></a>&ndash;%&gt;--%>
+
+
+            <%--</div>--%>
+            <a href="javascript:void(0)" class="list-group-item list-group-item-info" style="background-color: #3C6C6C;color: white">群组列表
+                <%--&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;--%>
+            </a>
+            <div id="ownerGroups">
                 <%
                     for (InterestGroup group : ownerGroups) {
                 %>
-                <a id="group_id_<%=group.getGroupName()%>" role="button" href="enterChat.action?groupName=<%=group.getGroupName()%>" class="list-group-item list-group-item-action"><%=group.getGroupName()%></a >
+                <a id="group_id_<%=group.getGroupName()%>" href="enterChat.action?groupName=<%=group.getGroupName()%>" class="list-group-item list-group-item-action">
+                    <div style='width:100px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;' title='<%=group.getGroupName()%>'>
+                        <%=group.getGroupName()%>
+                    </div>
+                </a >
+                <%
+                    }
+                %>
+                <%
+                    for (InterestGroup group : groups) {
+                %>
+                <a id="group_id_<%=group.getGroupName()%>" href="enterChat.action?groupName=<%=group.getGroupName()%>" class="list-group-item list-group-item-action">
+                    <div style='width:100px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;' title='<%=group.getGroupName()%>'>
+                        <%=group.getGroupName()%>
+                    </div>
+                </a >
                 <%
                     }
                 %>
             </div>
-            <a href="javascript:void(0)" class="list-group-item list-group-item-action">我加入的</a>
-            <div id="othergroups">
-            <%
-                for (InterestGroup group : groups) {
-            %>
-            <a id="group_id_<%=group.getGroupName()%>" role="button" href="enterChat.action?groupName=<%=group.getGroupName()%>" class="list-group-item list-group-item-action"><%=group.getGroupName()%></a >
-            <%
-                }
-            %>
-            </div>
-            <%--<a href="#" class="list-group-item list-group-item-action">小组1</a>--%>
-            <%--<a href="#" class="list-group-item list-group-item-action">小组2</a>--%>
-            <%--<a href="#" class="list-group-item list-group-item-action">小组3</a>--%>
-            <%--<a href="#" class="list-group-item list-group-item-action">小组4</a>--%>
-            <%--<a href="#" class="list-group-item list-group-item-action">小组5</a>--%>
-            <%--<a href="#" class="list-group-item list-group-item-action">小组6</a>--%>
+            <%--<a href="javascript:void(0)" class="list-group-item list-group-item-info" style="background-color: #3C6C6C;color: white">我加入的</a>--%>
+            <%--<div id="otherGroups">--%>
+            <%--<%--%>
+                <%--for (InterestGroup group : groups) {--%>
+            <%--%>--%>
+            <%--<a id="group_id_<%=group.getGroupName()%>" href="enterChat.action?groupName=<%=group.getGroupName()%>" class="list-group-item list-group-item-action">--%>
+                <%--<div style='width:100px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;' title='<%=group.getGroupName()%>'>--%>
+                    <%--<%=group.getGroupName()%>--%>
+                <%--</div>--%>
+            <%--</a >--%>
+            <%--<%--%>
+                <%--}--%>
+            <%--%>--%>
+            <%--</div>--%>
+            <div id="groupsEmpty" href="javascript:void(0)" class="list-group-item list-group-item-action" style="height: 500px"></div>
         </div>
     </div>
 
     <!--聊天室主体-->
-    <div class="col-md-6" style="margin-top: 2%;margin-left: -1%">
-        <div class="title">
+    <div class="col-md-8" style="margin-top: 1%;-webkit-box-shadow: #666 0 0 10px">
+        <div class="title" style="margin-top: 2%;">
             <div class="am-g am-g-fixed">
                 <div class="am-u-sm-12">
                     <s:if test="#session.group_name==null">
-                    <h1 class="am-text-primary">ChatRoom NoConnect!</h1>
+                        <div class="am-u-sm-12">
+                            <h1 class="am-text-primary">No Connect!</h1>
+                        </div>
                     </s:if>
                     <s:else>
-                        <h1 class="am-text-primary"><%=session.getAttribute("group_name")%></h1>
+                        <div class="am-u-sm-12">
+                            <h1 class="am-text-primary"><%=session.getAttribute("group_name")%></h1>
+                        </div>
                     </s:else>
                 </div>
             </div>
         </div>
         <!-- title end -->
 
-        <!-- chat content start 聊天界面 -->
-        <div class="chat-content">
-            <div class="am-g am-g-fixed chat-content-container">
-                <div class="am-u-sm-12">
-                    <ul id="message-list" class="am-comments-list am-comments-list-flip"></ul>
-                </div>
-            </div>
+<!-- chat content start 聊天界面 -->
+<div class="chat-content" style="margin-top: 1%;">
+    <div class="am-g am-g-fixed chat-content-container">
+        <div class="am-u-sm-12">
+            <ul id="message-list" class="am-comments-list am-comments-list-flip"></ul>
         </div>
-        <!-- chat content start -->
+    </div>
+</div>
+<!-- chat content start -->
 
         <!-- message input start 输入框 -->
         <div class="message-input am-margin-top">
@@ -203,52 +263,96 @@
     </div>
 
     <!--在线列表-->
-    <div class="col-md-3" style="margin-top: 2%;">
-        <ul class="list-group chatul" id="onlineLists">
-            <li class="list-group-item list-group-item-success">
-                <div style="width: 40px; height: 40px; float:left; border-radius: 50%; border: 3px solid #eee; overflow: hidden;">
-                    <img src="assets/images/self.png" width="40" height="40" />
-                </div>
-                &emsp;<%=session.getAttribute("user_name")%>
+    <div  id="memberList" class="col-md-2">
+        <ul class="list-group chatul">
+            <li class="list-group-item" style="background-color: #4db14d;color: #FFFFFF">
+                在线列表<span class="glyphicon glyphicon-globe" style="margin-left: 55%"></span>
             </li>
-            <%--<li class="list-group-item list-group-item-success">--%>
-                <%--<div style="width: 40px; height: 40px; float:left; border-radius: 50%; border: 3px solid #eee; overflow: hidden;">--%>
-                    <%--<img src="img/WHUpro2.jpg" width="40" height="40" />--%>
-                <%--</div>--%>
-                <%--&emsp;在线成员2--%>
-            <%--</li>--%>
-            <%--<li class="list-group-item list-group-item-success">--%>
-                <%--<div style="width: 40px; height: 40px; float:left; border-radius: 50%; border: 3px solid #eee; overflow: hidden;">--%>
-                    <%--<img src="img/WHUpro3.jpg" width="40" height="40" />--%>
-                <%--</div>--%>
-                <%--&emsp;在线成员3--%>
-            <%--</li>--%>
-            <%--<li class="list-group-item list-group-item-success">--%>
-                <%--<div style="width: 40px; height: 40px; float:left; border-radius: 50%; border: 3px solid #eee; overflow: hidden;">--%>
-                    <%--<img src="img/WHUpro1.jpg" width="40" height="40" />--%>
-                <%--</div>--%>
-                <%--&emsp;在线成员4--%>
-            <%--</li>--%>
-
-
-            <%--<li class="list-group-item list-group-item-light">--%>
-                <%--<div style="width: 40px; height: 40px; float:left; border-radius: 50%; border: 3px solid #eee; overflow: hidden;">--%>
-                    <%--<img class="grayimg" src="img/WHUpro1.jpg" width="40" height="40" />--%>
-                <%--</div>--%>
-                <%--&emsp;不在线成员1--%>
-            <%--</li>--%>
-            <%--<li class="list-group-item list-group-item-light">--%>
-                <%--<div style="width: 40px; height: 40px; float:left; border-radius: 50%; border: 3px solid #eee; overflow: hidden;">--%>
-                    <%--<img class="grayimg" src="img/WHUpro1.jpg" width="40" height="40" />--%>
-                <%--</div>--%>
-                <%--&emsp;不在线成员2--%>
-            <%--</li>--%>
+            <div id="onlineLists">
+                <li class="list-group-item list-group-item-success">
+                    <div style="width: 40px; height: 40px; float:left; border-radius: 50%; border: 3px solid #eee; overflow: hidden;">
+                        <img src="img/touxiang.jpeg" width="40" height="40" />
+                    </div>
+                    &emsp;<%=session.getAttribute("user_name")%>
+                </li>
+            </div>
+            <%--<div id="membersEmpty" href="javascript:void(0)" class="list-group-item list-group-item-action" style="height: 400px">--%>
+            <%--</div>--%>
         </ul>
     </div>
 </div>
 <!-- message input end -->
 <script src="assets/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+    function searchGroup() {
+        var value=$("#searchValue").val();
+        if(value==="")
+            return;
+        var url="searchGroup";
+        var args={
+            "searchStr":value,
+            "ownerID":<%=session.getAttribute("user_id")%>
+        };
+        $.post(url,args,function (data) {
+            var groups=JSON.parse(data);
+            if(groups.success==="true"){
+                var ownerGroups=groups.ownerGroups;
+                ownerGroups=init(ownerGroups);
+                var otherGroups=groups.otherGroups;
+                otherGroups=init(otherGroups);
+
+                var insertStr="";
+
+                for(var i=0;i<ownerGroups.length;i++) {
+                    if(ownerGroups[i]==="")
+                        continue;
+                    insertStr += "<a href=\"enterChat.action?groupName=" + ownerGroups[i] + "\" class=\"list-group-item list-group-item-action\">" +
+                        "<div style='width:100px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;' title='" + ownerGroups[i] + "'>" +
+                        ownerGroups[i] + "</div></a >";
+                }
+                var ownerPart=$("#ownerGroups");
+
+
+                for(i=0;i<otherGroups.length;i++) {
+                    if(otherGroups[i]==="")
+                        continue;
+                    insertStr += "<a href=\"enterChat.action?groupName=" + otherGroups[i] + "\" class=\"list-group-item list-group-item-action\">" +
+                        "<div style='width:100px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;' title='" + otherGroups[i] + "'>" +
+                        otherGroups[i] + "</div></a >";
+                }
+                ownerPart.empty();
+                ownerPart.append(insertStr);
+                // var otherPart=$("#otherGroups");
+                // otherPart.empty();
+                // otherPart.append(insertStr);
+            } else{
+                setTimeout(alert("搜索失败，请尝试输入关键短语重新搜索！"),1000);
+            }
+        });
+
+    }
+
+    function init(data) {
+        data=data.replace("[","").replace("]","");
+        data=data.split(',');
+        return data;
+    }
+
+</script>
+
+<%--消息接收、发送--%>
 <script>
+    $(function () {
+         var ge = $('#groupList').find('a');
+        // var me = $('#memberList').find('li');
+         var geH = 580 - ge.length * 50;
+        // var meH = 500 - me.length * 50;
+         if (geH > 0)
+             $('#groupsEmpty').css("height", geH+'px');
+        // if(meH>0)
+        //     $('#membersEmpty').css("height", meH+'px');
+    });
     var ws;//websocket实例
     var lockReconnect = false;//避免重复连接
     var wsUrl = 'ws://localhost:8080/ws/chatRoom/';
@@ -350,15 +454,15 @@
             var pic;
             if (msg.isSelf === "true") {
                 liCss = 'am-comment-flip';
-                pic = 'self.png';
+                pic = 'touxiang.jpeg';
             } else {
                 liCss = 'am-comment';
-                pic = 'others.jpg';
+                pic = 'touxiang.jpeg';
             }
             var messageItem = '<li class=" '
                 + liCss
                 + '">'
-                + '<a href="javascript:void(0)" ><img src="assets/images/'
+                + '<a href="javascript:void(0)" ><img src="img/'
                 + pic
                 + '" alt="" class="am-comment-avatar" width="48" height="48"/></a>'
                 + '<div class="am-comment-main"><header class="am-comment-hd"><div class="am-comment-meta">'
@@ -379,7 +483,7 @@
             for(var i=0;i<d.length;i++){
                 insertStr+="<li class=\"list-group-item list-group-item-success\">" +
                 "<div style=\"width: 40px; height: 40px; float:left; border-radius: 50%; border: 3px solid #eee; overflow: hidden;\">" +
-                "<img src=\"assets/images/self.png\" width=\"40\" height=\"40\" /></div>&emsp;"+d[i]+"</li>";
+                "<img src=\"img/touxiang.jpeg\" width=\"40\" height=\"40\" /></div>&emsp;"+d[i]+"</li>";
             }
             var lists=$("#onlineLists");
             lists.empty();

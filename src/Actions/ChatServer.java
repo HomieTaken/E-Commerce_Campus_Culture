@@ -29,6 +29,7 @@ public class ChatServer {
 
     private Session session;
     private HttpSession httpSession;
+    private String groupName;
 //    private static CopyOnWriteArraySet<ChatServer> ChatServers=new CopyOnWriteArraySet<>();
 
     //聊天组号与聊天组服务器组
@@ -38,13 +39,15 @@ public class ChatServer {
     public void onOpen(Session session, EndpointConfig config){
         try {
             init(session,config);
+            if(httpSession==null)
+                return;
             if(httpSession.getAttribute("user_name")==null)
                 return;
             if(httpSession.getAttribute("group_name")==null)
                 return;
 
             //添加服务器组，不存在的组则新建
-            String groupName=(String) httpSession.getAttribute("group_name");
+            groupName=(String) httpSession.getAttribute("group_name");
             if(!ChatServers.containsKey(groupName)){
                 CopyOnWriteArraySet<ChatServer> chatServers=new CopyOnWriteArraySet<>();
                 chatServers.add(this);
@@ -78,6 +81,8 @@ public class ChatServer {
     public void onMessage(Session session, String msg){
         if(httpSession.getAttribute("user_name")==null)
             return;
+        if(groupName==null)
+            return;
         try {
             send2All(msg);
             saveRecord(msg);
@@ -91,15 +96,27 @@ public class ChatServer {
     public void onError(Session session, Throwable throwable){
         if(httpSession.getAttribute("user_name")==null)
             return;
+        if(groupName==null)
+            return;
+        CopyOnWriteArraySet<ChatServer> chatServers=ChatServers.get(groupName);
+        chatServers.remove(this);
+        try {
+            sendOnlineUsers();
+        } catch (IOException | EncodeException e) {
+            e.printStackTrace();
+        }
     }
 
     @OnClose
     public void onClose(Session session, CloseReason reason){
         try {
+            if(httpSession==null)
+                return;
             if(httpSession.getAttribute("user_name")==null)
                 return;
+            if(groupName==null)
+                return;
 
-            String groupName=(String) httpSession.getAttribute("group_name");
             CopyOnWriteArraySet<ChatServer> chatServers=ChatServers.get(groupName);
             chatServers.remove(this);
 //            ChatServers.remove(this);//会不会remove 两次
@@ -170,7 +187,6 @@ public class ChatServer {
 
         String sendStr;
         //发送消息
-        String groupName=(String)httpSession.getAttribute("group_name");
         CopyOnWriteArraySet<ChatServer> chatServers=ChatServers.get(groupName);
         for(ChatServer chatServer:chatServers){
             sendStr=message+",\"isSelf\":\"" +chatServer.getSession().equals(session) +"\"}";
@@ -187,9 +203,8 @@ public class ChatServer {
      */
     private void sendOnlineUsers() throws IOException, EncodeException {
         //当有新用户连接服务器时，将在线列表发送给所有在线用户
-        if(httpSession.getAttribute("group_name")==null)
+        if(groupName==null)
             return;
-        String groupName=(String) httpSession.getAttribute("group_name");
         CopyOnWriteArraySet<ChatServer> chatServers=ChatServers.get(groupName);
         Set<String> userSet =new HashSet<>();
         for (ChatServer chatServer: chatServers){
